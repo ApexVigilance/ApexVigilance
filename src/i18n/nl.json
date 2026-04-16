@@ -1,0 +1,396 @@
+{
+  "common": {
+    "back": "Terug",
+    "close": "Sluiten",
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "soon": "Binnenkort beschikbaar",
+    "details": "Details",
+    "status": "Status",
+    "actions": "Acties",
+    "search": "Zoeken...",
+    "refresh": "Vernieuwen",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "confirm": "Bevestigen",
+    "yes": "Ja",
+    "no": "Nee",
+    "date": "Datum"
+  },
+  "compliance": {
+    "compliant": "Conform",
+    "partial": "Gedeeltelijk",
+    "nonCompliant": "Niet Conform"
+  },
+  "feedback": {
+    "titleFallback": "Feedback",
+    "description": "Geef een korte reden op (min. 10 tekens):",
+    "placeholder": "Beschrijf de reden...",
+    "chars": "tekens"
+  },
+  "print": {
+    "deprecated": {
+      "title": "Print via browser",
+      "desc": "Gebruik de PDF-download knop op de detailpagina om dit document af te drukken of te downloaden."
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "personeel": "Personeelsbestand",
+    "planning": "Planning",
+    "shifts": "Shifts & Opdrachten",
+    "tijdregistraties": "Tijdregistraties",
+    "rapporten": "Rapporten",
+    "incidenten": "Incidenten & Klachten",
+    "klanten": "Klanten & Locaties",
+    "facturatie": "Facturatie & Export"
+  },
+  "roles": {
+    "guard": "Bewaker",
+    "senior": "Senior Bewaker",
+    "admin": "Admin"
+  },
+  "dashboard": {
+    "title": "Operationeel Overzicht",
+    "subtitle": "Real-time status van Apex Vigilance Group",
+    "live": "LIVE",
+    "kpi": {
+      "activeShifts": "Actieve Shifts",
+      "openIncidents": "Open Incidenten",
+      "totalGuards": "Totaal Agenten"
+    },
+    "action": {
+      "newShift": "Nieuwe Shift",
+      "reportIncident": "Incident Melden",
+      "timeLogs": "Tijdregistraties",
+      "reports": "Rapporten"
+    },
+    "activity": {
+      "title": "Live Activiteitenstroom",
+      "empty": "Geen recente activiteit."
+    },
+    "quickActions": {
+      "title": "Snelle Acties"
+    }
+  },
+  "personeel": {
+    "title": "Personeelsbestand",
+    "subtitle": "Beheer van beveiligers en staf",
+    "filter": {
+      "all": "Alles"
+    }
+  },
+  "planning": {
+    "title": "Planning",
+    "subtitle": "Roosters en beschikbaarheid",
+    "exeLabel": "Exe-code",
+    "requirements": "Vereisten"
+  },
+  "shifts": {
+    "title": "Shifts & Opdrachten",
+    "subtitle": "Actieve en geplande diensten",
+    "detailTitle": "Shift Details",
+    "tabs": {
+      "mine": "Mijn Shifts",
+      "applications": "Aanvragen",
+      "open": "Beschikbaar"
+    },
+    "period": {
+      "all": "Alle Periodes",
+      "today": "Vandaag",
+      "week": "Deze Week",
+      "month": "Deze Maand"
+    },
+    "empty": {
+      "mine": "Je hebt nog geen ingeplande shifts.",
+      "applications": "Je hebt nog geen aanvragen.",
+      "open": "Er zijn momenteel geen open shifts."
+    },
+    "actions": {
+      "viewOpen": "Open Shifts Bekijken",
+      "resetFilter": "Filter Resetten"
+    },
+    "status": {
+      "full": "Volledig Bezet",
+      "open": "Open Posities",
+      "pending": "In Aanvraag",
+      "approved": "Goedgekeurd",
+      "rejected": "Afgewezen",
+      "withdrawn": "Ingetrokken"
+    },
+    "monitor": {
+      "title": "Live Status Monitor",
+      "subtitle": "Real-time overzicht van ingeklokte beveiligers",
+      "clockedIn": "Ingeklokt",
+      "offline": "Geen actieve registraties voor deze shift."
+    }
+  },
+  "tijd": {
+    "title": "Tijdregistraties",
+    "subtitle": "In- en uitklok logboek",
+    "manualReg": "Manuele Registratie",
+    "shiftCancelled": "Dienst Geannuleerd",
+    "admin": {
+      "nazicht": "Nazicht Vereist",
+      "emptyNazicht": "Geen afwijkingen te beoordelen."
+    },
+    "agent": {
+      "clockIn": "Inklokken",
+      "clockOut": "Uitklokken",
+      "pauseStart": "Pauze Starten",
+      "pauseStop": "Pauze Beëindigen",
+      "noShift": "Geen Actieve Shift",
+      "noShiftSub": "Je hebt momenteel geen actieve dienst.",
+      "status": {
+        "IN_DIENST": "IN DIENST",
+        "PAUZE": "PAUZE",
+        "AFGEROND": "AFGEROND",
+        "NIET_INGEKLOKT": "NIET INGEKLOKT"
+      },
+      "gps": {
+        "checking": "GPS wordt gecontroleerd...",
+        "withinZone": "Binnen zone",
+        "outsideZone": "Buiten zone",
+        "unavailable": "Locatie niet beschikbaar"
+      },
+      "exception": {
+        "title": "Locatie Afwijking",
+        "subtitle": "Je bent buiten de verwachte zone. Geef een reden op en voeg eventueel een foto toe.",
+        "reasonLabel": "Reden *",
+        "reasonPlaceholder": "Bv. Andere ingang, voertuig aan kade...",
+        "photoLabel": "Bewijs Foto (optioneel)",
+        "confirm": "Bevestigen & Doorgaan",
+        "reasons": {
+          "other_entrance": "Andere ingang gebruikt",
+          "vehicle": "Bij voertuig / kade",
+          "patrol": "Rondeloop buiten zone",
+          "technical": "GPS technisch probleem",
+          "other": "Andere reden"
+        }
+      },
+      "history": "Eerdere Registraties",
+      "today": "Vandaag",
+      "elapsed": "Verstreken tijd",
+      "outside": "Buiten zone",
+      "unavailable": "Locatie N.B.",
+      "reason": "Opgegeven reden"
+    }
+  },
+  "rapporten": {
+    "title": "Rapporten",
+    "subtitle": "Dagrapportages en logboeken",
+    "detailTitle": "Rapport Details"
+  },
+  "reports": {
+    "title": "Rapporten",
+    "subtitle": "Dagrapportages en logboeken",
+    "new": "Nieuw Rapport",
+    "mine": "Mijn Rapporten",
+    "modalTitle": "Nieuw Rapport Starten",
+    "typeLabel": "Rapporttype",
+    "linkShift": "Koppelen aan Shift",
+    "noShift": "— Geen shift —",
+    "startDraft": "Concept Aanmaken",
+    "types": {
+      "Daily": "Dagverslag",
+      "Incident": "Incident",
+      "Patrol": "Rondeloop",
+      "Other": "Overig"
+    },
+    "status": {
+      "Draft": "Concept",
+      "Submitted": "Ingediend",
+      "Approved": "Goedgekeurd",
+      "Rejected": "Afgekeurd"
+    },
+    "fields": {
+      "category": "Categorie",
+      "severity": "Ernst",
+      "summary": "Samenvatting",
+      "details": "Details",
+      "actions": "Ondernomen Acties",
+      "involved": "Betrokken Partijen",
+      "photos": "Foto's",
+      "location": "Locatie / Context"
+    },
+    "severity": {
+      "Low": "Laag",
+      "Medium": "Gemiddeld",
+      "High": "Hoog",
+      "Critical": "Kritiek"
+    },
+    "actions": {
+      "saveDraft": "Concept Opslaan",
+      "submit": "Indienen",
+      "approve": "Goedkeuren",
+      "reject": "Afkeuren",
+      "download": "Download PDF",
+      "print": "Afdrukken",
+      "resendEmail": "E-mail opnieuw verzenden"
+    },
+    "email": {
+      "sent": "Verzonden",
+      "failed": "Verzending mislukt"
+    }
+  },
+  "incidenten": {
+    "title": "Incidenten",
+    "subtitle": "Incident management en klachtenafhandeling",
+    "detailTitle": "Incident Dossier",
+    "newTitle": "Nieuw Incident",
+    "newTab": "Nieuw Incident",
+    "mineTab": "Mijn Incidenten",
+    "tabs": {
+      "submitted": "Ingediend",
+      "approved": "Goedgekeurd",
+      "rejected": "Afgekeurd",
+      "archived": "Gearchiveerd",
+      "all": "Alles"
+    },
+    "status": {
+      "Draft": "Concept",
+      "Submitted": "Ingediend",
+      "Approved": "Goedgekeurd",
+      "Rejected": "Afgekeurd",
+      "Archived": "Gearchiveerd"
+    },
+    "severity": {
+      "Low": "Laag",
+      "Medium": "Gemiddeld",
+      "High": "Hoog",
+      "Critical": "Kritiek"
+    },
+    "types": {
+      "incident": "Incident",
+      "complaint": "Klacht"
+    },
+    "fields": {
+      "severity": "Ernst",
+      "title": "Titel",
+      "description": "Beschrijving",
+      "photos": "Foto's",
+      "location": "Locatie"
+    },
+    "validation": {
+      "required": "Titel en beschrijving zijn verplicht."
+    },
+    "photoLimit": "Maximum 3 foto's toegestaan.",
+    "emptyList": "Geen incidenten gevonden voor dit filter.",
+    "agent": {
+      "linkedShift": "Gekoppeld aan Shift",
+      "selectClient": "Selecteer Klant...",
+      "selectLocation": "Selecteer Locatie...",
+      "selectShift": "Selecteer Shift (Optioneel)...",
+      "titlePlaceholder": "Korte beschrijving van het incident...",
+      "descPlaceholder": "Beschrijf wat er is gebeurd, wanneer en waar...",
+      "maxPhotos": "Max. 3 foto's",
+      "addPhoto": "Toevoegen",
+      "photoError": "Fout bij comprimeren van foto.",
+      "emptyMine": "Je hebt nog geen incidenten gemeld."
+    },
+    "notFound": "Incident niet gevonden.",
+    "confirmArchive": "Weet je zeker dat je dit incident wilt archiveren?",
+    "isDraft": "Dit incident is een concept en nog niet ingediend.",
+    "noContext": "Geen gerelateerd shift",
+    "communication": "Communicatie & Opmerkingen",
+    "commentPlaceholder": "Voeg een opmerking toe...",
+    "actions": {
+      "archive": "Archiveren"
+    },
+    "email": {
+      "send": "Verstuur via E-mail",
+      "sendTitle": "Incident Versturen via E-mail",
+      "resend": "Opnieuw Versturen",
+      "sent": "E-mail Verstuurd",
+      "failed": "Verzending Mislukt",
+      "sending": "Bezig met Verzenden...",
+      "defaultSubject": "Incidentrapport: {{title}}",
+      "recipients": "Ontvangers",
+      "commaSeparated": "(komma-gescheiden)",
+      "placeholder": "naam@voorbeeld.be",
+      "subject": "Onderwerp",
+      "message": "Begeleidende Boodschap",
+      "messagePlaceholder": "Optionele toelichting bij het rapport...",
+      "attachmentInfo": "Incidentrapport wordt automatisch als PDF bijgevoegd."
+    },
+    "emailTemplate": {
+      "greeting": "Geachte,",
+      "body": "Hierbij ontvangt u het incidentrapport met referentie {{id}}.",
+      "noteLabel": "Opmerking:",
+      "signatureLine1": "Met vriendelijke groeten,",
+      "signatureLine2": "Apex Vigilance Group"
+    },
+    "alerts": {
+      "emailSuccess": "E-mail succesvol verstuurd.",
+      "emailFail": "Fout bij het versturen van e-mail: "
+    }
+  },
+  "klanten": {
+    "title": "Klanten & Locaties",
+    "subtitle": "CRM en postinstructies",
+    "locatiesBtn": "Bekijk Locaties",
+    "new": "Nieuwe Klant",
+    "active": "Actief",
+    "inactive": "Inactief",
+    "locationCount": "locaties",
+    "notFound": "Geen klanten gevonden.",
+    "newLoc": "Locatie Toevoegen",
+    "noLocs": "Geen locaties gevonden voor deze klant.",
+    "recentShifts": "Recente Shifts",
+    "form": {
+      "name": "Bedrijfsnaam",
+      "vat": "BTW-nummer",
+      "contact": "Contactpersoon",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "address": "Adres",
+      "create": "Aanmaken",
+      "cancel": "Annuleren",
+      "locName": "Naam Locatie",
+      "locAddress": "Adres",
+      "city": "Stad / Gemeente",
+      "type": "Type",
+      "access": "Toegangsinstructies"
+    },
+    "actions": {
+      "print": "Afdrukken",
+      "toggle": "Activeer / Deactiveer",
+      "viewInvoices": "Facturen",
+      "viewMap": "Bekijk op kaart"
+    }
+  },
+  "facturatie": {
+    "title": "Facturatie",
+    "subtitle": "Financiële exports en pre-billing",
+    "exportBtn": "Naar Exports",
+    "status": {
+      "Concept": "Concept",
+      "Sent": "Verzonden",
+      "Paid": "Betaald",
+      "Draft": "Concept"
+    },
+    "stats": {
+      "revenue": "Omzet",
+      "revenueSub": "Totaal gefactureerd (Incl. BTW)",
+      "drafts": "Concepten",
+      "draftsSub": "Wachten op verzending",
+      "outstanding": "Openstaand",
+      "outstandingSub": "Verzonden, nog niet betaald",
+      "paid": "Betaald",
+      "paidSub": "Facturen volledig voldaan"
+    },
+    "actions": {
+      "new": "Nieuwe facturatieronde",
+      "manage": "Facturen beheren",
+      "export": "Export CSV"
+    },
+    "export": {
+      "title": "Financiële Export",
+      "desc": "Exporteer factuurgegevens als CSV voor boekhouding of externe systemen.",
+      "from": "Periode Van",
+      "to": "Periode Tot",
+      "download": "Download CSV"
+    }
+  }
+}

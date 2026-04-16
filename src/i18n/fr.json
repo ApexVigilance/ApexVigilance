@@ -1,0 +1,396 @@
+{
+  "common": {
+    "back": "Retour",
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "soon": "Bientôt disponible",
+    "details": "Détails",
+    "status": "Statut",
+    "actions": "Actions",
+    "search": "Chercher...",
+    "refresh": "Actualiser",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non",
+    "date": "Date"
+  },
+  "compliance": {
+    "compliant": "Conforme",
+    "partial": "Partiel",
+    "nonCompliant": "Non Conforme"
+  },
+  "feedback": {
+    "titleFallback": "Feedback",
+    "description": "Donnez une brève raison (min. 10 caractères):",
+    "placeholder": "Décrivez la raison...",
+    "chars": "caractères"
+  },
+  "print": {
+    "deprecated": {
+      "title": "Imprimer via le navigateur",
+      "desc": "Utilisez le bouton de téléchargement PDF sur la page de détail pour imprimer ou télécharger ce document."
+    }
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "personeel": "Personnel",
+    "planning": "Planning",
+    "shifts": "Shifts & Missions",
+    "tijdregistraties": "Pointages",
+    "rapporten": "Rapports",
+    "incidenten": "Incidents & Plaintes",
+    "klanten": "Clients & Sites",
+    "facturatie": "Facturation & Exports"
+  },
+  "roles": {
+    "guard": "Agent",
+    "senior": "Agent Senior",
+    "admin": "Admin"
+  },
+  "dashboard": {
+    "title": "Aperçu Opérationnel",
+    "subtitle": "Statut en temps réel de Apex Vigilance Group",
+    "live": "EN DIRECT",
+    "kpi": {
+      "activeShifts": "Shifts Actifs",
+      "openIncidents": "Incidents Ouverts",
+      "totalGuards": "Total Agents"
+    },
+    "action": {
+      "newShift": "Nouveau Shift",
+      "reportIncident": "Signaler Incident",
+      "timeLogs": "Pointages",
+      "reports": "Rapports"
+    },
+    "activity": {
+      "title": "Flux d'Activité en Direct",
+      "empty": "Aucune activité récente."
+    },
+    "quickActions": {
+      "title": "Actions Rapides"
+    }
+  },
+  "personeel": {
+    "title": "Personnel",
+    "subtitle": "Gestion des agents et du staff",
+    "filter": {
+      "all": "Tout"
+    }
+  },
+  "planning": {
+    "title": "Planning",
+    "subtitle": "Horaires et disponibilités",
+    "exeLabel": "Code Exe",
+    "requirements": "Exigences"
+  },
+  "shifts": {
+    "title": "Shifts & Missions",
+    "subtitle": "Services actifs et planifiés",
+    "detailTitle": "Détails du Shift",
+    "tabs": {
+      "mine": "Mes Shifts",
+      "applications": "Candidatures",
+      "open": "Disponibles"
+    },
+    "period": {
+      "all": "Toutes les Périodes",
+      "today": "Aujourd'hui",
+      "week": "Cette Semaine",
+      "month": "Ce Mois"
+    },
+    "empty": {
+      "mine": "Vous n'avez pas encore de shifts planifiés.",
+      "applications": "Vous n'avez pas encore de candidatures.",
+      "open": "Il n'y a actuellement pas de shifts disponibles."
+    },
+    "actions": {
+      "viewOpen": "Voir les Shifts Disponibles",
+      "resetFilter": "Réinitialiser le Filtre"
+    },
+    "status": {
+      "full": "Complet",
+      "open": "Postes Ouverts",
+      "pending": "En Attente",
+      "approved": "Approuvé",
+      "rejected": "Refusé",
+      "withdrawn": "Retiré"
+    },
+    "monitor": {
+      "title": "Moniteur de Statut en Direct",
+      "subtitle": "Vue en temps réel des agents pointés",
+      "clockedIn": "Pointé",
+      "offline": "Aucun pointage actif pour ce shift."
+    }
+  },
+  "tijd": {
+    "title": "Pointages",
+    "subtitle": "Journal des entrées et sorties",
+    "manualReg": "Enregistrement Manuel",
+    "shiftCancelled": "Service Annulé",
+    "admin": {
+      "nazicht": "Vérification Requise",
+      "emptyNazicht": "Aucune déviation à examiner."
+    },
+    "agent": {
+      "clockIn": "Pointer Entrée",
+      "clockOut": "Pointer Sortie",
+      "pauseStart": "Commencer Pause",
+      "pauseStop": "Terminer Pause",
+      "noShift": "Aucun Shift Actif",
+      "noShiftSub": "Vous n'avez pas de service actif en ce moment.",
+      "status": {
+        "IN_DIENST": "EN SERVICE",
+        "PAUZE": "EN PAUSE",
+        "AFGEROND": "TERMINÉ",
+        "NIET_INGEKLOKT": "NON POINTÉ"
+      },
+      "gps": {
+        "checking": "Vérification GPS...",
+        "withinZone": "Dans la zone",
+        "outsideZone": "Hors zone",
+        "unavailable": "Localisation indisponible"
+      },
+      "exception": {
+        "title": "Déviation de Localisation",
+        "subtitle": "Vous êtes en dehors de la zone prévue. Veuillez indiquer la raison et ajouter une photo si nécessaire.",
+        "reasonLabel": "Raison *",
+        "reasonPlaceholder": "Ex. Autre entrée, véhicule au quai...",
+        "photoLabel": "Photo de Preuve (optionnel)",
+        "confirm": "Confirmer & Continuer",
+        "reasons": {
+          "other_entrance": "Autre entrée utilisée",
+          "vehicle": "Près du véhicule / quai",
+          "patrol": "Ronde hors zone",
+          "technical": "Problème technique GPS",
+          "other": "Autre raison"
+        }
+      },
+      "history": "Historique des Pointages",
+      "today": "Aujourd'hui",
+      "elapsed": "Temps écoulé",
+      "outside": "Hors zone",
+      "unavailable": "Localisation N.D.",
+      "reason": "Raison indiquée"
+    }
+  },
+  "rapporten": {
+    "title": "Rapports",
+    "subtitle": "Rapports quotidiens et journaux",
+    "detailTitle": "Détails du Rapport"
+  },
+  "reports": {
+    "title": "Rapports",
+    "subtitle": "Rapports quotidiens et journaux",
+    "new": "Nouveau Rapport",
+    "mine": "Mes Rapports",
+    "modalTitle": "Démarrer un Nouveau Rapport",
+    "typeLabel": "Type de Rapport",
+    "linkShift": "Lier à un Shift",
+    "noShift": "— Aucun shift —",
+    "startDraft": "Créer un Brouillon",
+    "types": {
+      "Daily": "Rapport Quotidien",
+      "Incident": "Incident",
+      "Patrol": "Ronde",
+      "Other": "Autre"
+    },
+    "status": {
+      "Draft": "Brouillon",
+      "Submitted": "Soumis",
+      "Approved": "Approuvé",
+      "Rejected": "Refusé"
+    },
+    "fields": {
+      "category": "Catégorie",
+      "severity": "Gravité",
+      "summary": "Résumé",
+      "details": "Détails",
+      "actions": "Actions Prises",
+      "involved": "Parties Impliquées",
+      "photos": "Photos",
+      "location": "Lieu / Contexte"
+    },
+    "severity": {
+      "Low": "Faible",
+      "Medium": "Moyen",
+      "High": "Élevé",
+      "Critical": "Critique"
+    },
+    "actions": {
+      "saveDraft": "Sauvegarder Brouillon",
+      "submit": "Soumettre",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "download": "Télécharger PDF",
+      "print": "Imprimer",
+      "resendEmail": "Renvoyer l'e-mail"
+    },
+    "email": {
+      "sent": "Envoyé",
+      "failed": "Échec d'envoi"
+    }
+  },
+  "incidenten": {
+    "title": "Incidents",
+    "subtitle": "Gestion des incidents et des plaintes",
+    "detailTitle": "Dossier Incident",
+    "newTitle": "Nouvel Incident",
+    "newTab": "Nouvel Incident",
+    "mineTab": "Mes Incidents",
+    "tabs": {
+      "submitted": "Soumis",
+      "approved": "Approuvés",
+      "rejected": "Refusés",
+      "archived": "Archivés",
+      "all": "Tout"
+    },
+    "status": {
+      "Draft": "Brouillon",
+      "Submitted": "Soumis",
+      "Approved": "Approuvé",
+      "Rejected": "Refusé",
+      "Archived": "Archivé"
+    },
+    "severity": {
+      "Low": "Faible",
+      "Medium": "Moyen",
+      "High": "Élevé",
+      "Critical": "Critique"
+    },
+    "types": {
+      "incident": "Incident",
+      "complaint": "Plainte"
+    },
+    "fields": {
+      "severity": "Gravité",
+      "title": "Titre",
+      "description": "Description",
+      "photos": "Photos",
+      "location": "Lieu"
+    },
+    "validation": {
+      "required": "Le titre et la description sont obligatoires."
+    },
+    "photoLimit": "Maximum 3 photos autorisées.",
+    "emptyList": "Aucun incident trouvé pour ce filtre.",
+    "agent": {
+      "linkedShift": "Lié au Shift",
+      "selectClient": "Sélectionner Client...",
+      "selectLocation": "Sélectionner Site...",
+      "selectShift": "Sélectionner Shift (Optionnel)...",
+      "titlePlaceholder": "Brève description de l'incident...",
+      "descPlaceholder": "Décrivez ce qui s'est passé, quand et où...",
+      "maxPhotos": "Max. 3 photos",
+      "addPhoto": "Ajouter",
+      "photoError": "Erreur lors de la compression de la photo.",
+      "emptyMine": "Vous n'avez pas encore signalé d'incidents."
+    },
+    "notFound": "Incident introuvable.",
+    "confirmArchive": "Êtes-vous sûr de vouloir archiver cet incident?",
+    "isDraft": "Cet incident est un brouillon et n'a pas encore été soumis.",
+    "noContext": "Aucun shift associé",
+    "communication": "Communication & Remarques",
+    "commentPlaceholder": "Ajouter un commentaire...",
+    "actions": {
+      "archive": "Archiver"
+    },
+    "email": {
+      "send": "Envoyer par E-mail",
+      "sendTitle": "Envoyer l'Incident par E-mail",
+      "resend": "Renvoyer",
+      "sent": "E-mail Envoyé",
+      "failed": "Échec d'Envoi",
+      "sending": "Envoi en cours...",
+      "defaultSubject": "Rapport d'incident: {{title}}",
+      "recipients": "Destinataires",
+      "commaSeparated": "(séparés par des virgules)",
+      "placeholder": "nom@exemple.be",
+      "subject": "Objet",
+      "message": "Message d'Accompagnement",
+      "messagePlaceholder": "Note optionnelle accompagnant le rapport...",
+      "attachmentInfo": "Le rapport d'incident sera automatiquement joint en PDF."
+    },
+    "emailTemplate": {
+      "greeting": "Madame, Monsieur,",
+      "body": "Veuillez trouver ci-joint le rapport d'incident référence {{id}}.",
+      "noteLabel": "Note:",
+      "signatureLine1": "Avec nos cordiales salutations,",
+      "signatureLine2": "Apex Vigilance Group"
+    },
+    "alerts": {
+      "emailSuccess": "E-mail envoyé avec succès.",
+      "emailFail": "Erreur lors de l'envoi de l'e-mail: "
+    }
+  },
+  "klanten": {
+    "title": "Clients & Sites",
+    "subtitle": "CRM et instructions de poste",
+    "locatiesBtn": "Voir les Sites",
+    "new": "Nouveau Client",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "locationCount": "sites",
+    "notFound": "Aucun client trouvé.",
+    "newLoc": "Ajouter un Site",
+    "noLocs": "Aucun site trouvé pour ce client.",
+    "recentShifts": "Shifts Récents",
+    "form": {
+      "name": "Nom de l'entreprise",
+      "vat": "Numéro TVA",
+      "contact": "Personne de contact",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "create": "Créer",
+      "cancel": "Annuler",
+      "locName": "Nom du Site",
+      "locAddress": "Adresse",
+      "city": "Ville / Commune",
+      "type": "Type",
+      "access": "Instructions d'accès"
+    },
+    "actions": {
+      "print": "Imprimer",
+      "toggle": "Activer / Désactiver",
+      "viewInvoices": "Factures",
+      "viewMap": "Voir sur la carte"
+    }
+  },
+  "facturatie": {
+    "title": "Facturation",
+    "subtitle": "Exports financiers et pré-facturation",
+    "exportBtn": "Vers Exports",
+    "status": {
+      "Concept": "Brouillon",
+      "Sent": "Envoyé",
+      "Paid": "Payé",
+      "Draft": "Brouillon"
+    },
+    "stats": {
+      "revenue": "Chiffre d'Affaires",
+      "revenueSub": "Total facturé (TVA incl.)",
+      "drafts": "Brouillons",
+      "draftsSub": "En attente d'envoi",
+      "outstanding": "En attente",
+      "outstandingSub": "Envoyé, pas encore payé",
+      "paid": "Payé",
+      "paidSub": "Factures entièrement réglées"
+    },
+    "actions": {
+      "new": "Nouveau cycle de facturation",
+      "manage": "Gérer les factures",
+      "export": "Export CSV"
+    },
+    "export": {
+      "title": "Export Financier",
+      "desc": "Exportez les données de facturation en CSV pour la comptabilité ou les systèmes externes.",
+      "from": "Période Du",
+      "to": "Période Au",
+      "download": "Télécharger CSV"
+    }
+  }
+}
