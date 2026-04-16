@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex Ops</title>
+    <script>
+      window.tailwind = {
+        config: {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                apex: {
+                  black: 'var(--apex-black)',
+                  dark: 'var(--apex-surface)',
+                  gold: '#d4af37',
+                  goldlight: '#f3e5ab',
+                  muted: 'var(--apex-muted)'
+                }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --apex-black: #121212;
+        --apex-surface: #1e1e1e;
+        --apex-muted: #a1a1aa;
+        --bg-zinc-950: #09090b;
+        --bg-zinc-900: #18181b;
+        --border-zinc-800: #27272a;
+        --text-zinc-400: #a1a1aa;
+        --text-main: #ffffff;
+      }
+      html.light {
+        --apex-black: #ffffff;
+        --apex-surface: #f4f4f5;
+        --apex-muted: #71717a;
+        --bg-zinc-950: #f8fafc;
+        --bg-zinc-900: #ffffff;
+        --border-zinc-800: #e2e8f0;
+        --text-zinc-400: #64748b;
+        --text-main: #18181b;
+      }
+      /* Override Tailwind Zinc colors to follow variables for instant theme flip */
+      .bg-zinc-950 { background-color: var(--bg-zinc-950) !important; }
+      .bg-zinc-900 { background-color: var(--bg-zinc-900) !important; }
+      .border-zinc-800 { border-color: var(--border-zinc-800) !important; }
+      .text-zinc-400 { color: var(--text-zinc-400) !important; }
+      
+      body { 
+        background-color: var(--bg-zinc-950); 
+        color: var(--text-main); 
+        transition: background-color 0.3s ease;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* Apex Gold — hardcoded fallback zodat knoppen altijd zichtbaar zijn */
+      .bg-apex-gold { background-color: #d4af37 !important; }
+      .text-apex-gold { color: #d4af37 !important; }
+      .border-apex-gold { border-color: #d4af37 !important; }
+      .hover\:bg-yellow-500:hover { background-color: #eab308 !important; }
+      .text-apex-gold\/70 { color: rgba(212,175,55,0.7) !important; }
+      .bg-apex-gold\/10 { background-color: rgba(212,175,55,0.1) !important; }
+      .bg-apex-gold\/20 { background-color: rgba(212,175,55,0.2) !important; }
+      .border-apex-gold\/20 { border-color: rgba(212,175,55,0.2) !important; }
+      .border-apex-gold\/30 { border-color: rgba(212,175,55,0.3) !important; }
+      .border-apex-gold\/50 { border-color: rgba(212,175,55,0.5) !important; }
+      .hover\:border-apex-gold\/50:hover { border-color: rgba(212,175,55,0.5) !important; }
+      .shadow-apex-gold\/20 { box-shadow: 0 4px 16px rgba(212,175,55,0.2); }
+      .focus\:border-apex-gold:focus { border-color: #d4af37 !important; }
+      .focus\:ring-apex-gold\/50:focus { --tw-ring-color: rgba(212,175,55,0.5); }
+      .group-hover\:text-apex-gold { color: #d4af37; }
+      .hover\:text-apex-gold:hover { color: #d4af37 !important; }
+      .hover\:bg-apex-gold:hover { background-color: #d4af37 !important; }
+      .text-apex-gold { color: #d4af37 !important; }
+
+      /* Smooth Transitions */
+      * { transition: background-color 0.2s ease, border-color 0.2s ease; }
+
+      /* Error Overlay Styling */
+      #fatal-error-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        color: #ff4444;
+        z-index: 99999;
+        padding: 40px;
+        font-family: 'JetBrains Mono', monospace;
+        display: none;
+        overflow: auto;
+      }
+    </style>
+
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react/jsx-dev-runtime": "https://esm.sh/react@18.2.0/jsx-dev-runtime",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.0?deps=react@18.2.0,react-dom@18.2.0",
+    "zustand": "https://esm.sh/zustand@4.5.0?deps=react@18.2.0",
+    "i18next": "https://esm.sh/i18next@23.10.0",
+    "react-i18next": "https://esm.sh/react-i18next@14.0.0?deps=react@18.2.0,react-dom@18.2.0,i18next@23.10.0",
+    "clsx": "https://esm.sh/clsx@2.1.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+    "vite": "https://esm.sh/vite@5.1.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@4.2.0",
+    "path": "https://esm.sh/path-browserify",
+    "url": "https://esm.sh/url",
+    "vitest": "https://esm.sh/vitest@^4.0.18",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "jspdf-autotable": "https://esm.sh/jspdf-autotable@3.8.2?deps=jspdf@2.5.1",
+    "jszip": "https://esm.sh/jszip@3.10.1",
+    "@/": "./src/",
+    "express": "https://esm.sh/express@^5.2.1",
+    "cors": "https://esm.sh/cors@^2.8.6",
+    "dotenv": "https://esm.sh/dotenv@^17.3.1",
+    "nodemailer": "https://esm.sh/nodemailer@^8.0.1"
+  }
+}
+</script>
+    <script type="module" crossorigin src="./assets/index-diM59ks5.js"></script>
+  </head>
+  <body class="bg-zinc-950 text-white">
+    <div id="root"></div>
+    <div id="fatal-error-overlay">
+      <h1 style="font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">FATAL SYSTEM ERROR</h1>
+      <pre id="error-content" style="white-space: pre-wrap;"></pre>
+      <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #333; color: #fff; border: 1px solid #555; cursor: pointer;">RESTART SYSTEM</button>
+    </div>
+  </body>
+</html>
