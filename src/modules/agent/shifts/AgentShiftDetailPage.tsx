@@ -1,12 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../../../data/store';
+import { useAuthStore } from '../../auth/store';
 import { MapPin, Clock, Calendar, ChevronLeft, Shield, Info, CheckCircle, XCircle, FileQuestion, RotateCcw, FileText } from 'lucide-react';
 import clsx from 'clsx';
 
-const CURRENT_AGENT_ID = '2'; // Mock
+
 
 export const AgentShiftDetailPage: React.FC = () => {
+  const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { id } = useParams(); // Group Key (Base64)
   const navigate = useNavigate();
   const { shifts, applications, applyForShift, withdrawApplication, unclaimShift } = useStore();

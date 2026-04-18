@@ -23,6 +23,13 @@ export const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { shifts, incidents, employees, updates } = useStore();
+
+  const usingDefaultCreds = (() => {
+    try {
+      const c = JSON.parse(localStorage.getItem('apex_admin_credentials') || '{"username":"admin","password":"admin"}');
+      return c.username === 'admin' && c.password === 'admin';
+    } catch { return true; }
+  })();
   const [activityFilter, setActivityFilter] = useState<'ALL' | 'ALERT' | 'INFO' | 'SUCCESS'>('ALL');
 
   // KPI DATA CALCULATIONS
@@ -108,7 +115,18 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="relative space-y-6 md:space-y-8 animate-in fade-in duration-500">
-      
+
+      {/* Default credentials warning */}
+      {usingDefaultCreds && (
+        <div className="flex items-center gap-3 bg-yellow-500/10 border border-yellow-500/40 rounded-xl px-4 py-3 text-yellow-300 text-sm">
+          <AlertTriangle className="w-5 h-5 text-yellow-400 shrink-0" />
+          <span className="flex-1">
+            <strong>Beveiligingswaarschuwing:</strong> U gebruikt nog het standaard wachtwoord <code className="bg-yellow-500/20 px-1 rounded">admin/admin</code>. Wijzig dit onmiddellijk via{' '}
+            <button onClick={() => navigate('/settings')} className="underline hover:text-yellow-200 font-semibold">Instellingen</button>.
+          </span>
+        </div>
+      )}
+
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-apex-gold/5 rounded-full blur-[100px] opacity-20" />

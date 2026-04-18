@@ -9,22 +9,21 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 
-// Mock ID for current logged in agent (Pieter) matching seed data
-const CURRENT_AGENT_ID = '2'; 
 
 export const AgentDashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { shifts, employees, updates } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
   // --- DATA LOGIC (LIVE FROM STORE) ---
-  
+
   const now = new Date();
 
   // 1. Current Agent Data
-  const currentAgent = useMemo(() => employees.find(e => e.id === CURRENT_AGENT_ID), [employees]);
+  const currentAgent = useMemo(() => employees.find(e => e.id === CURRENT_AGENT_ID), [employees, CURRENT_AGENT_ID]);
 
   // 2. My Shifts (Live filter from store)
   const myShifts = useMemo(() => 

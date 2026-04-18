@@ -13,7 +13,15 @@ const nodemailer = require('nodemailer');
 const app = express();
 const PORT = 3001;
 
-app.use(cors({ origin: '*' }));
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:4173', 'https://apexvigilance.github.io'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || ALLOWED_ORIGINS.some(o => origin.startsWith(o))) callback(null, true);
+    else callback(new Error('CORS: origine niet toegestaan'));
+  }
+}));
 app.use(express.json({ limit: '25mb' })); // factuur PDF kan groot zijn
 
 // Standaard one.com SMTP instellingen (worden overschreven door wat admin invult in Settings)

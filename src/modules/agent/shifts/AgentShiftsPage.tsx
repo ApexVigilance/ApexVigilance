@@ -6,12 +6,15 @@ import { ShiftCard } from './components/ShiftCard';
 import { Filter, ChevronDown, RefreshCw, Calendar, Inbox, Search, History } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../auth/store';
 
-const CURRENT_AGENT_ID = '2'; // Mock
+
 
 export const AgentShiftsPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { shifts, applications } = useStore();
   
   const [activeTab, setActiveTab] = useState<'MINE' | 'APPLICATIONS' | 'OPEN'>('MINE');

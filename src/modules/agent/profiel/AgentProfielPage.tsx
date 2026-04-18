@@ -5,11 +5,12 @@ import { useStore, Employee } from '../../../data/store';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-const CURRENT_AGENT_ID = '2'; // Mock
+
 
 export const AgentProfielPage: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { employees, updateEmployee, updateBadge } = useStore();
   
   const currentAgent = employees.find(e => e.id === CURRENT_AGENT_ID);

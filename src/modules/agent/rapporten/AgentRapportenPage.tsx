@@ -2,6 +2,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../auth/store';
 import { useStore, FullReport, ReportType, ReportCategory, IncidentSeverity } from '../../../data/store';
 import { 
   FileText, Plus, Search, ChevronRight, MapPin, Camera, AlertTriangle, 
@@ -10,10 +11,12 @@ import {
 import { generateReportPdf } from '../../../services/reporting';
 import clsx from 'clsx';
 
-const CURRENT_AGENT_ID = '2'; // Mock
+
 
 export const AgentRapportenPage: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const navigate = useNavigate();
   const location = useLocation();
   const { reports, createReport, updateReport, shifts, clients, locations, employees } = useStore();

@@ -13,7 +13,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:4173', 'https://apexvigilance.github.io'];
+app.use(cors({
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || ALLOWED_ORIGINS.some((o: string) => origin.startsWith(o))) callback(null, true);
+    else callback(new Error('CORS: origine niet toegestaan'));
+  }
+}));
 app.use(express.json({ limit: '10mb' })); // Allow large payloads for PDF
 
 const PORT = process.env.PORT || 3000;

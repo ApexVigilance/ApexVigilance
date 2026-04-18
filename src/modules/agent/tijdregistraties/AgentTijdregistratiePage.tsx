@@ -5,14 +5,17 @@ import {
   CheckCircle2, XCircle, Camera, X, History, CalendarDays,
   ChevronRight, Shield, Navigation, RefreshCw
 } from 'lucide-react';
+import { useAuthStore } from '../../auth/store';
 import { useStore, TimeEvent, TimeEventType, TimeLog, GeofenceStatus, ReviewStatus } from '../../../data/store';
 import { calculateDistance } from '../../../utils/geofence';
 import clsx from 'clsx';
 
-const CURRENT_AGENT_ID = '2'; // Mock
+
 
 export const AgentTijdregistratiePage: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { timeLogs, shifts, logTimeEvent, createTimeLog } = useStore();
 
   // -- STATE --
