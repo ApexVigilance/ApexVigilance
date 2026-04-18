@@ -27,7 +27,12 @@ const KEYS = {
 const loadFromStorage = <T>(key: string, seed: T): T => {
   try {
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : seed;
+    if (stored !== null) return JSON.parse(stored);
+    // Persist seed data so auth and other modules can read it directly from localStorage
+    if (Array.isArray(seed) ? (seed as unknown[]).length > 0 : seed !== null && seed !== undefined) {
+      localStorage.setItem(key, JSON.stringify(seed));
+    }
+    return seed;
   } catch (e) {
     return seed;
   }

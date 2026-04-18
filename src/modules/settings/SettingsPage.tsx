@@ -27,6 +27,10 @@ export const SettingsPage: React.FC = () => {
   const [showAdminPass, setShowAdminPass] = useState(false);
   const [adminSaved, setAdminSaved] = useState(false);
 
+  // Reset confirmation state
+  const [resetText, setResetText] = useState('');
+  const RESET_CONFIRM_PHRASE = 'VERWIJDER ALLES';
+
   const handleSaveAdminCreds = () => {
     if (!adminCreds.username || !adminCreds.password) return;
     localStorage.setItem(ADMIN_CREDS_KEY, JSON.stringify(adminCreds));
@@ -170,8 +174,12 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Admin credentials */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
+      <div className="bg-zinc-900 border border-amber-800/40 rounded-lg p-6 mb-8">
         <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2"><KeyRound className="w-5 h-5 text-apex-gold" /> Admin inloggegevens</h3>
+        <div className="flex items-start gap-2 bg-amber-950/40 border border-amber-700/40 rounded-lg px-3 py-2 mb-4">
+          <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+          <p className="text-amber-300 text-xs"><strong>Alleen voor de beheerder.</strong> Deze gegevens geven volledige toegang tot het systeem. Deel ze nooit met medewerkers of klanten.</p>
+        </div>
         <p className="text-zinc-500 text-xs mb-4">Wijzig de gebruikersnaam en het wachtwoord van het admin-account.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
@@ -202,14 +210,40 @@ export const SettingsPage: React.FC = () => {
       {/* SMTP */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
           <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2"><Mail className="w-5 h-5 text-apex-gold" /> E-mail (SMTP)</h3>
-          <p className="text-zinc-500 text-xs mb-4">Ingesteld voor one.com. Vul enkel uw wachtwoord in en klik Opslaan.</p>
+          <p className="text-zinc-500 text-xs mb-3">Configureer de SMTP-server voor het verzenden van facturen en incidentmeldingen.</p>
+
+          {/* Free SMTP options */}
+          <div className="bg-blue-950/30 border border-blue-800/40 rounded-lg p-3 mb-4">
+            <p className="text-blue-300 text-xs font-bold mb-2">💡 Gratis SMTP opties</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-zinc-400">
+              <div className="bg-zinc-800/60 rounded p-2">
+                <p className="text-white font-semibold">Gmail (aanbevolen)</p>
+                <p>Host: <code className="text-apex-gold">smtp.gmail.com</code></p>
+                <p>Poort: <code className="text-apex-gold">587</code></p>
+                <p className="text-zinc-500 mt-1">Vereist Gmail App-wachtwoord (via Google Account → Beveiliging → App-wachtwoorden)</p>
+              </div>
+              <div className="bg-zinc-800/60 rounded p-2">
+                <p className="text-white font-semibold">Brevo (gratis)</p>
+                <p>Host: <code className="text-apex-gold">smtp-relay.brevo.com</code></p>
+                <p>Poort: <code className="text-apex-gold">587</code></p>
+                <p className="text-zinc-500 mt-1">300 e-mails/dag gratis via brevo.com</p>
+              </div>
+              <div className="bg-zinc-800/60 rounded p-2">
+                <p className="text-white font-semibold">One.com (betaald)</p>
+                <p>Host: <code className="text-apex-gold">send.one.com</code></p>
+                <p>Poort: <code className="text-apex-gold">465</code></p>
+                <p className="text-zinc-500 mt-1">Gebruik uw one.com e-mailwachtwoord</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                   <label className="text-xs text-zinc-500 block mb-1">SMTP Host</label>
                   <input type="text" value={smtp.host} onChange={e=>setSmtp({...smtp, host:e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
               </div>
               <div>
-                  <label className="text-xs text-zinc-500 block mb-1">Poort (465 = SSL)</label>
+                  <label className="text-xs text-zinc-500 block mb-1">Poort (587 = TLS / 465 = SSL)</label>
                   <input type="number" value={smtp.port} onChange={e=>setSmtp({...smtp, port:parseInt(e.target.value)})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
               </div>
               <div>
@@ -217,8 +251,8 @@ export const SettingsPage: React.FC = () => {
                   <input type="email" value={smtp.user} onChange={e=>setSmtp({...smtp, user:e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
               </div>
               <div>
-                  <label className="text-xs text-zinc-500 block mb-1">Wachtwoord <span className="text-apex-gold">*</span></label>
-                  <input type="password" placeholder="Uw one.com wachtwoord" value={smtp.pass} onChange={e=>setSmtp({...smtp, pass:e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
+                  <label className="text-xs text-zinc-500 block mb-1">Wachtwoord / App-wachtwoord <span className="text-apex-gold">*</span></label>
+                  <input type="password" placeholder="Wachtwoord of App-wachtwoord" value={smtp.pass} onChange={e=>setSmtp({...smtp, pass:e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
               </div>
           </div>
           <button onClick={handleSaveSmtp} className="mt-4 bg-apex-gold text-black px-4 py-2 rounded font-bold flex items-center gap-2"><Save className="w-4 h-4"/> Opslaan</button>
@@ -229,24 +263,36 @@ export const SettingsPage: React.FC = () => {
           <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
               <Trash2 className="w-5 h-5 text-red-500" /> Alle Data Wissen
           </h3>
-          <p className="text-zinc-400 text-sm mb-4">
-              Verwijdert alle lokale data: medewerkers, shifts, klanten, incidenten, rapporten en tijdregistraties. De app start opnieuw leeg op. Dit kan niet ongedaan worden gemaakt.
-          </p>
+          <div className="bg-red-950/40 border border-red-800/50 rounded-lg p-3 mb-4 flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+              <p className="text-red-300 text-sm">
+                  <strong>Onomkeerbare actie.</strong> Verwijdert alle medewerkers, shifts, klanten, incidenten, rapporten en tijdregistraties. Dit kan niet ongedaan worden gemaakt.
+              </p>
+          </div>
+          <label className="block text-xs font-bold text-zinc-400 uppercase mb-1">
+              Typ <span className="text-red-400 font-mono">{RESET_CONFIRM_PHRASE}</span> om te bevestigen
+          </label>
+          <input
+              type="text"
+              value={resetText}
+              onChange={e => setResetText(e.target.value)}
+              placeholder={RESET_CONFIRM_PHRASE}
+              className="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-white text-sm mb-3 focus:border-red-500 outline-none font-mono"
+          />
           <button
+              disabled={resetText !== RESET_CONFIRM_PHRASE}
               onClick={() => {
-                  if (confirm('Ben je zeker? Alle data wordt permanent gewist en de pagina wordt herladen.')) {
-                      const keysToRemove = [
-                          'apex_employees', 'apex_shifts_v2', 'apex_applications_v2',
-                          'apex_incidents', 'apex_clients', 'apex_locations',
-                          'apex_reports', 'apex_timelogs_v2', 'apex_system_updates',
-                          'apex_billing_invoices_v2', 'apex_billing_overrides_v2',
-                          'apex_billing_config_v2'
-                      ];
-                      keysToRemove.forEach(k => localStorage.removeItem(k));
-                      window.location.reload();
-                  }
+                  const keysToRemove = [
+                      'apex_employees', 'apex_shifts_v2', 'apex_applications_v2',
+                      'apex_incidents', 'apex_clients', 'apex_locations',
+                      'apex_reports', 'apex_timelogs_v2', 'apex_system_updates',
+                      'apex_billing_invoices_v2', 'apex_billing_overrides_v2',
+                      'apex_billing_config_v2'
+                  ];
+                  keysToRemove.forEach(k => localStorage.removeItem(k));
+                  window.location.reload();
               }}
-              className="bg-red-600 hover:bg-red-500 text-white px-5 py-2.5 rounded font-bold flex items-center gap-2 transition-colors"
+              className="bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-2.5 rounded font-bold flex items-center gap-2 transition-colors"
           >
               <RefreshCw className="w-4 h-4" /> Reset & Herlaad
           </button>
