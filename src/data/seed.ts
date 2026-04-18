@@ -1,14 +1,377 @@
 
 import { Employee, Shift, Incident, Client, Report, TimeLog } from './types';
 
-export const SEED_EMPLOYEES: Employee[] = [];
+const now = new Date();
+const d = (daysOffset: number, hour = 8, min = 0) => {
+  const dt = new Date(now);
+  dt.setDate(dt.getDate() + daysOffset);
+  dt.setHours(hour, min, 0, 0);
+  return dt.toISOString();
+};
 
-export const SEED_SHIFTS: Shift[] = [];
+export const SEED_EMPLOYEES: Employee[] = [
+  {
+    id: 'EMP-001',
+    name: 'Jan Peeters',
+    firstName: 'Jan',
+    lastName: 'Peeters',
+    role: 'Guard',
+    status: 'Active',
+    email: 'jan.peeters@apexsecurity.be',
+    phone: '0472 11 22 33',
+    address: 'Antwerpsesteenweg 12, 2000 Antwerpen',
+    nationalRegisterNr: '85.04.12-123.45',
+    languages: ['NL', 'FR'],
+    contractType: 'Voltijds',
+    hourlyRate: 18.5,
+    badgeNr: 'BA-2024-001',
+    badgeExpiry: new Date(now.getFullYear() + 2, now.getMonth(), now.getDate()).toISOString().split('T')[0],
+    personalInfoStatus: 'APPROVED',
+    idCardStatus: 'APPROVED',
+    badgeDataStatus: 'APPROVED',
+    certificates: ['EHBO', 'Brandveiligheid'],
+    portalUsername: 'jan.peeters',
+    portalPassword: 'agent123',
+    auditLog: [{ date: d(-60), action: 'Account aangemaakt', user: 'Admin' }],
+  },
+  {
+    id: 'EMP-002',
+    name: 'Marie Claes',
+    firstName: 'Marie',
+    lastName: 'Claes',
+    role: 'Senior',
+    status: 'Active',
+    email: 'marie.claes@apexsecurity.be',
+    phone: '0473 44 55 66',
+    address: 'Brusselsestraat 8, 9000 Gent',
+    contractType: 'Voltijds',
+    hourlyRate: 21.0,
+    badgeNr: 'BA-2024-002',
+    badgeExpiry: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 20).toISOString().split('T')[0],
+    personalInfoStatus: 'APPROVED',
+    idCardStatus: 'APPROVED',
+    badgeDataStatus: 'APPROVED',
+    certificates: ['EHBO', 'Bewakingswet'],
+    portalUsername: 'marie.claes',
+    portalPassword: 'agent123',
+    auditLog: [{ date: d(-90), action: 'Account aangemaakt', user: 'Admin' }],
+  },
+  {
+    id: 'EMP-003',
+    name: 'Ahmed Bouazza',
+    firstName: 'Ahmed',
+    lastName: 'Bouazza',
+    role: 'Guard',
+    status: 'Active',
+    email: 'ahmed.bouazza@apexsecurity.be',
+    phone: '0474 77 88 99',
+    address: 'Havenstraat 45, 2060 Antwerpen',
+    contractType: 'Deeltijds',
+    hourlyRate: 17.5,
+    badgeNr: 'BA-2023-099',
+    badgeExpiry: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString().split('T')[0],
+    personalInfoStatus: 'APPROVED',
+    idCardStatus: 'PENDING',
+    badgeDataStatus: 'REJECTED',
+    portalUsername: 'ahmed.bouazza',
+    portalPassword: 'agent123',
+    auditLog: [
+      { date: d(-120), action: 'Account aangemaakt', user: 'Admin' },
+      { date: d(-10), action: 'Badge verlopen – vernieuwing vereist', user: 'Admin' },
+    ],
+  },
+  {
+    id: 'EMP-004',
+    name: 'Lien Vermeersch',
+    firstName: 'Lien',
+    lastName: 'Vermeersch',
+    role: 'Guard',
+    status: 'Inactive',
+    email: 'lien.vermeersch@apexsecurity.be',
+    phone: '0475 00 11 22',
+    contractType: 'Voltijds',
+    hourlyRate: 18.0,
+    personalInfoStatus: 'APPROVED',
+    idCardStatus: 'APPROVED',
+    badgeDataStatus: 'MISSING',
+    auditLog: [{ date: d(-200), action: 'Account aangemaakt', user: 'Admin' }],
+  },
+];
 
-export const SEED_INCIDENTS: Incident[] = [];
+export const SEED_CLIENTS: Client[] = [
+  {
+    id: 'CLI-001',
+    clientRef: 'CLI-2026-0001',
+    name: 'Carrefour Belgium NV',
+    locations: 2,
+    contact: 'Dirk Martens',
+    status: 'Active',
+    email: 'security@carrefour.be',
+    phone: '02 555 10 00',
+    address: 'Olympiadenlaan 20, 1140 Brussel',
+    vat: 'BE0400.378.485',
+    paymentTerms: 30,
+    contractNumber: 'CTR-2025-001',
+    contractStart: '2025-01-01',
+    contractEnd: '2026-12-31',
+    contacts: [{ name: 'Dirk Martens', role: 'Facility Manager', email: 'dirk.martens@carrefour.be', phone: '0476 20 30 40' }],
+    portalUsername: 'carrefour',
+    portalPassword: 'client123',
+  },
+  {
+    id: 'CLI-002',
+    clientRef: 'CLI-2026-0002',
+    name: 'Port of Antwerp-Bruges NV',
+    locations: 3,
+    contact: 'Sofie Van den Berg',
+    status: 'Active',
+    email: 'beveiliging@portofantwerpbruges.com',
+    phone: '03 229 67 00',
+    address: 'Havenhuis, Zaha Hadidplein 1, 2030 Antwerpen',
+    vat: 'BE0235.896.119',
+    paymentTerms: 45,
+    contractNumber: 'CTR-2025-002',
+    contractStart: '2025-03-01',
+    contractEnd: '2027-02-28',
+    contacts: [{ name: 'Sofie Van den Berg', role: 'Security Coordinator', email: 'sofie.vandenberg@portofantwerpbruges.com', phone: '0477 50 60 70' }],
+    portalUsername: 'portofantwerp',
+    portalPassword: 'client123',
+  },
+  {
+    id: 'CLI-003',
+    clientRef: 'CLI-2026-0003',
+    name: 'Decathlon Gent NV',
+    locations: 1,
+    contact: 'Thomas De Wolf',
+    status: 'Active',
+    email: 'gent@decathlon.be',
+    phone: '09 265 75 00',
+    address: 'Wijk aan de Gavers 2, 9800 Deinze',
+    vat: 'BE0448.517.876',
+    paymentTerms: 30,
+    contacts: [{ name: 'Thomas De Wolf', role: 'Store Manager', email: 'thomas.dewolf@decathlon.be', phone: '0478 80 90 10' }],
+    portalUsername: 'decathlon',
+    portalPassword: 'client123',
+  },
+];
 
-export const SEED_CLIENTS: Client[] = [];
+const GRP1 = 'GRP-STATIC-0001';
+const GRP2 = 'GRP-STATIC-0002';
+const GRP3 = 'GRP-STATIC-0003';
+const GRP4 = 'GRP-STATIC-0004';
 
-export const SEED_REPORTS: Report[] = [];
+export const SEED_SHIFTS: Shift[] = [
+  // Afgeronde shifts (verleden)
+  {
+    id: 'SHF-001', groupId: GRP1, clientId: 'CLI-001', clientName: 'Carrefour Belgium NV',
+    location: 'Carrefour Evere', startTime: d(-7, 8), endTime: d(-7, 20),
+    employeeId: 'EMP-001', status: 'Completed', serviceType: 'Winkel',
+    briefing: 'Standaard winkelbeveiliging. Extra aandacht voor ingang.',
+  },
+  {
+    id: 'SHF-002', groupId: GRP1, clientId: 'CLI-001', clientName: 'Carrefour Belgium NV',
+    location: 'Carrefour Evere', startTime: d(-7, 8), endTime: d(-7, 20),
+    employeeId: 'EMP-002', status: 'Completed', serviceType: 'Winkel',
+  },
+  {
+    id: 'SHF-003', groupId: GRP2, clientId: 'CLI-002', clientName: 'Port of Antwerp-Bruges NV',
+    location: 'Havendok Noord', startTime: d(-3, 6), endTime: d(-3, 18),
+    employeeId: 'EMP-001', status: 'Approved', serviceType: 'Haven',
+    briefing: 'Toegangscontrole hoofdpoort. Legitimatiebewijs verplicht.',
+  },
+  // Geplande shifts (toekomst)
+  {
+    id: 'SHF-004', groupId: GRP3, clientId: 'CLI-001', clientName: 'Carrefour Belgium NV',
+    location: 'Carrefour Evere', startTime: d(1, 8), endTime: d(1, 20),
+    employeeId: 'EMP-001', status: 'Scheduled', serviceType: 'Winkel',
+    briefing: 'Weekend dienst. Verhoogde alertheid bij kassa\'s.',
+  },
+  {
+    id: 'SHF-005', groupId: GRP3, clientId: 'CLI-001', clientName: 'Carrefour Belgium NV',
+    location: 'Carrefour Evere', startTime: d(1, 8), endTime: d(1, 20),
+    employeeId: 'EMP-002', status: 'Scheduled', serviceType: 'Winkel',
+  },
+  {
+    id: 'SHF-006', groupId: GRP4, clientId: 'CLI-002', clientName: 'Port of Antwerp-Bruges NV',
+    location: 'Havendok Noord', startTime: d(3, 6), endTime: d(3, 18),
+    employeeId: '', status: 'Scheduled', serviceType: 'Haven',
+    briefing: 'Nachtdienst. 2 bewakers vereist.',
+  },
+  {
+    id: 'SHF-007', groupId: GRP4, clientId: 'CLI-002', clientName: 'Port of Antwerp-Bruges NV',
+    location: 'Havendok Noord', startTime: d(3, 6), endTime: d(3, 18),
+    employeeId: '', status: 'Scheduled', serviceType: 'Haven',
+  },
+  {
+    id: 'SHF-008', groupId: 'GRP-STATIC-0005', clientId: 'CLI-003', clientName: 'Decathlon Gent NV',
+    location: 'Decathlon Deinze', startTime: d(5, 9), endTime: d(5, 18),
+    employeeId: '', status: 'Scheduled', serviceType: 'Winkel',
+  },
+  {
+    id: 'SHF-009', groupId: 'GRP-STATIC-0006', clientId: 'CLI-002', clientName: 'Port of Antwerp-Bruges NV',
+    location: 'Containerterminal B', startTime: d(7, 22), endTime: d(8, 6),
+    employeeId: '', status: 'Scheduled', serviceType: 'Haven',
+  },
+  {
+    id: 'SHF-010', groupId: 'GRP-STATIC-0007', clientId: 'CLI-003', clientName: 'Decathlon Gent NV',
+    location: 'Decathlon Deinze', startTime: d(10, 9), endTime: d(10, 18),
+    employeeId: 'EMP-001', status: 'Scheduled', serviceType: 'Winkel',
+  },
+];
 
-export const SEED_TIME_LOGS: TimeLog[] = [];
+export const SEED_INCIDENTS: Incident[] = [
+  {
+    id: 'INC-001',
+    title: 'Winkeldiefstal – Carrefour Evere',
+    severity: 'Medium',
+    date: d(-5),
+    status: 'Approved',
+    type: 'Incident',
+    description: 'Verdachte persoon betrapte op het verbergen van elektronica onder kledij. Overgedragen aan politie.',
+    clientId: 'CLI-001',
+    authorId: 'EMP-001',
+    photos: [],
+    comments: [{ id: 'CMT-001', text: 'Dossier overgemaakt aan klant.', author: 'Admin', date: d(-4) }],
+    auditLog: [
+      { date: d(-5), action: 'Incident aangemaakt', user: 'Jan Peeters' },
+      { date: d(-4), action: 'Goedgekeurd door admin', user: 'Admin' },
+    ],
+    approvedBy: 'Admin',
+    approvedAt: d(-4),
+    emailStatus: 'SENT',
+  },
+  {
+    id: 'INC-002',
+    title: 'Onbevoegde toegang – Havendok Noord',
+    severity: 'High',
+    date: d(-2),
+    status: 'Submitted',
+    type: 'Incident',
+    description: 'Onbekende persoon zonder toegangsbadge aangetroffen in beperkte zone. Onmiddellijk verwijderd en geregistreerd.',
+    clientId: 'CLI-002',
+    authorId: 'EMP-002',
+    photos: [],
+    comments: [],
+    auditLog: [
+      { date: d(-2), action: 'Incident aangemaakt', user: 'Marie Claes' },
+      { date: d(-2), action: 'Ingediend voor review', user: 'Marie Claes' },
+    ],
+    emailStatus: 'NONE',
+  },
+  {
+    id: 'INC-003',
+    title: 'Beschadiging parking – Decathlon Deinze',
+    severity: 'Low',
+    date: d(-1),
+    status: 'Draft',
+    type: 'Complaint',
+    description: 'Klant meldde beschadiging aan voertuig op parking. Camerabeelden worden gecontroleerd.',
+    clientId: 'CLI-003',
+    authorId: 'EMP-001',
+    photos: [],
+    comments: [],
+    auditLog: [{ date: d(-1), action: 'Draft aangemaakt', user: 'Jan Peeters' }],
+    emailStatus: 'NONE',
+  },
+];
+
+export const SEED_REPORTS: Report[] = [
+  {
+    id: 'RPT-001',
+    type: 'Daily',
+    author: 'Jan Peeters',
+    authorId: 'EMP-001',
+    date: d(-7),
+    status: 'Approved',
+    title: 'Dagrapport – Carrefour Evere',
+    summary: 'Rustige dienst zonder noemenswaardige incidenten.',
+    details: 'Patrouilleronden uitgevoerd om 09:00, 12:00 en 17:00. Alle nooduitgangen gecontroleerd en vrijgehouden. Camerabeelden gecontroleerd.',
+    category: 'Overig',
+    images: [],
+    auditLog: [
+      { date: d(-7), action: 'Rapport aangemaakt', user: 'Jan Peeters' },
+      { date: d(-6), action: 'Goedgekeurd', user: 'Admin' },
+    ],
+    emailStatus: 'SENT',
+  },
+  {
+    id: 'RPT-002',
+    type: 'Incident',
+    author: 'Marie Claes',
+    authorId: 'EMP-002',
+    date: d(-2),
+    status: 'Submitted',
+    title: 'Incidentrapport – Haven toegangscontrole',
+    summary: 'Ongeautoriseerde persoon aangetroffen in beveiligde zone.',
+    details: 'Om 14:35 werd een persoon zonder geldig toegangsbadge aangetroffen bij ingang B. Na identificatie bleek het om een externe leverancier zonder begeleiding te gaan. Protocollen gevolgd, persoon begeleid naar receptie.',
+    category: 'Toegang_Geweigerd',
+    severity: 'High',
+    images: [],
+    auditLog: [
+      { date: d(-2), action: 'Rapport aangemaakt', user: 'Marie Claes' },
+      { date: d(-2), action: 'Ingediend voor review', user: 'Marie Claes' },
+    ],
+    emailStatus: 'NONE',
+  },
+];
+
+export const SEED_TIME_LOGS: TimeLog[] = [
+  {
+    id: 'TL-001',
+    shiftId: 'SHF-001',
+    employeeId: 'EMP-001',
+    date: d(-7).split('T')[0],
+    clockIn: d(-7, 7, 58),
+    clockOut: d(-7, 20, 5),
+    status: 'OK',
+    approvalStatus: 'APPROVED',
+    deviationMinutes: -2,
+    geoLat: 50.8503,
+    geoLng: 4.3517,
+    currentStatus: 'AFGEROND',
+    events: [
+      {
+        id: 'TE-001', timeLogId: 'TL-001', agentId: 'EMP-001',
+        type: 'INKLOK', timestamp: d(-7, 7, 58),
+        geoLat: 50.8503, geoLng: 4.3517,
+        geofenceStatus: 'BINNEN_ZONE', reviewStatus: 'GOEDGEKEURD',
+        reviewedBy: 'Admin', reviewedAt: d(-6),
+      },
+      {
+        id: 'TE-002', timeLogId: 'TL-001', agentId: 'EMP-001',
+        type: 'UITKLOK', timestamp: d(-7, 20, 5),
+        geoLat: 50.8503, geoLng: 4.3517,
+        geofenceStatus: 'BINNEN_ZONE', reviewStatus: 'GOEDGEKEURD',
+        reviewedBy: 'Admin', reviewedAt: d(-6),
+      },
+    ],
+  },
+  {
+    id: 'TL-002',
+    shiftId: 'SHF-003',
+    employeeId: 'EMP-001',
+    date: d(-3).split('T')[0],
+    clockIn: d(-3, 6, 3),
+    clockOut: d(-3, 18, 1),
+    status: 'OK',
+    approvalStatus: 'SUBMITTED',
+    deviationMinutes: 3,
+    geoLat: 51.2194,
+    geoLng: 4.4025,
+    currentStatus: 'AFGEROND',
+    events: [
+      {
+        id: 'TE-003', timeLogId: 'TL-002', agentId: 'EMP-001',
+        type: 'INKLOK', timestamp: d(-3, 6, 3),
+        geoLat: 51.2194, geoLng: 4.4025,
+        geofenceStatus: 'BINNEN_ZONE', reviewStatus: 'OK',
+      },
+      {
+        id: 'TE-004', timeLogId: 'TL-002', agentId: 'EMP-001',
+        type: 'UITKLOK', timestamp: d(-3, 18, 1),
+        geoLat: 51.2194, geoLng: 4.4025,
+        geofenceStatus: 'BINNEN_ZONE', reviewStatus: 'OK',
+      },
+    ],
+  },
+];

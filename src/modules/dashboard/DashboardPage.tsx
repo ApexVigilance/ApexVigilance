@@ -3,19 +3,22 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../data/store';
-import { 
-  ShieldAlert, 
-  AlertTriangle, 
-  Users, 
-  ChevronRight, 
-  CalendarPlus, 
-  Clock, 
-  FileText, 
-  Activity, 
+import {
+  ShieldAlert,
+  AlertTriangle,
+  Users,
+  ChevronRight,
+  CalendarPlus,
+  Clock,
+  FileText,
+  Activity,
   CheckCircle2,
   Bell,
   BellOff,
-  Zap
+  Zap,
+  Lightbulb,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -23,7 +26,15 @@ export const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { shifts, incidents, employees, updates } = useStore();
+
+  const usingDefaultCreds = (() => {
+    try {
+      const c = JSON.parse(localStorage.getItem('apex_admin_credentials') || '{"username":"admin","password":"admin"}');
+      return c.username === 'admin' && c.password === 'admin';
+    } catch { return true; }
+  })();
   const [activityFilter, setActivityFilter] = useState<'ALL' | 'ALERT' | 'INFO' | 'SUCCESS'>('ALL');
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   // KPI DATA CALCULATIONS
   const activeShiftsCount = shifts.filter(s => s.status === 'Active').length;
@@ -108,7 +119,18 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="relative space-y-6 md:space-y-8 animate-in fade-in duration-500">
-      
+
+      {/* Default credentials warning */}
+      {usingDefaultCreds && (
+        <div className="flex items-center gap-3 bg-yellow-500/10 border border-yellow-500/40 rounded-xl px-4 py-3 text-yellow-300 text-sm">
+          <AlertTriangle className="w-5 h-5 text-yellow-400 shrink-0" />
+          <span className="flex-1">
+            <strong>Beveiligingswaarschuwing:</strong> U gebruikt nog het standaard wachtwoord <code className="bg-yellow-500/20 px-1 rounded">admin/admin</code>. Wijzig dit onmiddellijk via{' '}
+            <button onClick={() => navigate('/settings')} className="underline hover:text-yellow-200 font-semibold">Instellingen</button>.
+          </span>
+        </div>
+      )}
+
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-apex-gold/5 rounded-full blur-[100px] opacity-20" />
@@ -268,6 +290,103 @@ export const DashboardPage: React.FC = () => {
               ))}
            </div>
         </div>
+      </div>
+
+      {/* Suggestions Card */}
+      <div className="relative z-10 rounded-2xl border border-apex-gold/20 bg-zinc-900/40 backdrop-blur-md overflow-hidden">
+        <button
+          onClick={() => setSuggestionsOpen(o => !o)}
+          className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-apex-gold/10 rounded-xl border border-apex-gold/20">
+              <Lightbulb className="w-5 h-5 text-apex-gold" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-white font-bold">Verbeteringssuggesties</h3>
+              <p className="text-zinc-500 text-xs">35 ideeën om ApexVigilance professioneler te maken</p>
+            </div>
+          </div>
+          {suggestionsOpen ? <ChevronUp className="w-5 h-5 text-zinc-500" /> : <ChevronDown className="w-5 h-5 text-zinc-500" />}
+        </button>
+
+        {suggestionsOpen && (
+          <div className="border-t border-zinc-800 p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <h4 className="text-xs font-bold text-apex-gold uppercase tracking-widest mb-3">Onmiddellijk (gratis)</h4>
+              <ul className="space-y-2 text-sm text-zinc-300">
+                {[
+                  'Sessie timeout na 8u inactiviteit',
+                  'Automatische JSON back-up downloadbaar',
+                  'Excel export van tijdregistraties & shifts',
+                  'Wachtwoord wijzigen bij eerste login',
+                  'Inloggeschiedenis bijhouden',
+                  'Live klok op agent dashboard',
+                  'Routebeschrijving-knop op shift detail',
+                  'Briefing bevestigen vóór dienst',
+                  'Persoonlijk urenoverzicht voor agent',
+                  'Bulk-acties: shifts goedkeuren/annuleren',
+                  'Herhalende shifts (wekelijks)',
+                  'Notificatiebadge in de header',
+                ].map(s => (
+                  <li key={s} className="flex items-start gap-2">
+                    <span className="text-apex-gold mt-0.5 shrink-0">•</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Korte termijn</h4>
+              <ul className="space-y-2 text-sm text-zinc-300">
+                {[
+                  'PWA installeerbaar op telefoon-startscherm',
+                  'Push notificaties voor agenten (OneSignal)',
+                  'Kalenderweergave voor planning (week/maand)',
+                  'Drag & drop shifts in planning',
+                  'Globale zoekfunctie in de header',
+                  'Keyboard shortcuts (N=shift, Esc=sluiten)',
+                  'Shift wisselen tussen collega\'s',
+                  'Verlofbeheer & goedkeuringen',
+                  'Contractbeheer met vervaldatummelding',
+                  'Kostenrapport per shift/klant/maand',
+                  'Compacte tabelweergave naast kaartweergave',
+                  'Klantportaal: shifts aanvragen',
+                  'Factuurherinneringen automatisch',
+                  'Audit trail exporteerbaar als PDF',
+                ].map(s => (
+                  <li key={s} className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-0.5 shrink-0">•</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3">Lange termijn (architectuur)</h4>
+              <ul className="space-y-2 text-sm text-zinc-300">
+                {[
+                  'Supabase backend — data nooit meer kwijt',
+                  'Wachtwoord hashing (bcrypt)',
+                  '2FA voor admin (Google Authenticator)',
+                  'QR-code inklokken op locatie',
+                  'SOS noodknop voor agenten',
+                  'Auto-toewijzing op basis van beschikbaarheid',
+                  'Digitale handtekening op rapporten',
+                  'Avatar/profielfoto voor medewerkers',
+                  'Taalinstelling per gebruiker opslaan',
+                  'Factuur PDF met klantbranding',
+                  'Barcode/badgescanner integratie',
+                ].map(s => (
+                  <li key={s} className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-0.5 shrink-0">•</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

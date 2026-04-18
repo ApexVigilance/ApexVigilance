@@ -27,7 +27,12 @@ const KEYS = {
 const loadFromStorage = <T>(key: string, seed: T): T => {
   try {
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : seed;
+    if (stored !== null) return JSON.parse(stored);
+    // Persist seed data so auth and other modules can read it directly from localStorage
+    if (Array.isArray(seed) ? (seed as unknown[]).length > 0 : seed !== null && seed !== undefined) {
+      localStorage.setItem(key, JSON.stringify(seed));
+    }
+    return seed;
   } catch (e) {
     return seed;
   }
@@ -295,6 +300,8 @@ export const useStore = create<AppState>((set, get) => ({
       }
   },
   billingUpdateInvoice: (id, lines, note) => set(s => {
+      const invoice = s.billingInvoices.find(i => i.id === id);
+      if (!invoice || invoice.locked) return {};
       const subtotalExcl = lines.reduce((sum, l) => sum + l.totalExcl, 0);
       const vatTotal = lines.reduce((sum, l) => sum + l.vatAmount, 0);
       const totalIncl = subtotalExcl + vatTotal;
@@ -494,7 +501,13 @@ export const useStore = create<AppState>((set, get) => ({
   submitReport: (id) => get().updateReport(id, { status: 'Submitted', auditLog: [...(get().reports.find(r=>r.id===id)?.auditLog||[]), { action: 'Submitted', user: 'Agent', date: new Date().toISOString() }] }),
   approveReport: (id) => get().updateReport(id, { status: 'Approved', auditLog: [...(get().reports.find(r=>r.id===id)?.auditLog||[]), { action: 'Approved', user: 'Admin', date: new Date().toISOString() }] }),
   rejectReport: (id, reason) => get().updateReport(id, { status: 'Rejected', lastRejectedReason: reason, auditLog: [...(get().reports.find(r=>r.id===id)?.auditLog||[]), { action: 'Rejected', user: 'Admin', date: new Date().toISOString(), reason }] }),
-  retryReportEmail: (id) => {},
+  retryReportEmail: (id) => {
+    get().updateReport(id, {
+      emailStatus: 'PENDING',
+      auditLog: [...(get().reports.find(r => r.id === id)?.auditLog || []),
+        { action: 'Email herstart door admin', user: 'Admin', date: new Date().toISOString() }]
+    });
+  },
   createIncident: (inc) => set(s => { 
       const n = [...s.incidents, inc]; 
       localStorage.setItem('apex_incidents', JSON.stringify(n)); 
@@ -642,7 +655,23 @@ export const useStore = create<AppState>((set, get) => ({
       localStorage.setItem(KEYS.APPLICATIONS, JSON.stringify(newApps));
       return { applications: newApps };
   }),
-  claimShift: (criteria, agentId) => true,
+  claimShift: (criteria, agentId) => {
+    const state = get();
+    const openSlot = state.shifts.find(s =>
+      s.clientName === criteria.c && s.location === criteria.l &&
+      s.startTime === criteria.s && s.endTime === criteria.e &&
+      (!s.employeeId || s.employeeId === '')
+    );
+    if (!openSlot) return false;
+    set(s => {
+      const newShifts = s.shifts.map(sh =>
+        sh.id === openSlot.id ? { ...sh, employeeId: agentId } : sh
+      );
+      localStorage.setItem(KEYS.SHIFTS, JSON.stringify(newShifts));
+      return { shifts: newShifts };
+    });
+    return true;
+  },
   unclaimShift: (criteria, agentId) => set(s => {
       const newShifts = s.shifts.map(sh => (
           sh.clientName === criteria.c && sh.location === criteria.l && 
@@ -652,7 +681,25 @@ export const useStore = create<AppState>((set, get) => ({
       localStorage.setItem(KEYS.SHIFTS, JSON.stringify(newShifts));
       return { shifts: newShifts };
   }),
-  runDailyBadgeCheck: () => {},
+  runDailyBadgeCheck: () => {
+    const { employees, updates, addUpdate } = get();
+    const today = new Date();
+    const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+    employees.filter(e => e.status === 'Active' && e.badgeExpiry).forEach(emp => {
+      const expiry = new Date(emp.badgeExpiry!);
+      const alreadyNotified = updates.some(u =>
+        u.type === 'badge' && u.text.includes(emp.name) &&
+        new Date(u.timestamp) > new Date(today.getTime() - 24 * 60 * 60 * 1000)
+      );
+      if (alreadyNotified) return;
+      if (expiry < today) {
+        addUpdate(`Badge van ${emp.name} is VERLOPEN (${emp.badgeExpiry})`, 'badge');
+      } else if (expiry <= in30Days) {
+        const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        addUpdate(`Badge van ${emp.name} vervalt over ${diffDays} dag(en) (${emp.badgeExpiry})`, 'badge');
+      }
+    });
+  },
   createShifts: (newShifts) => set(state => {
       const updated = [...state.shifts, ...newShifts];
       localStorage.setItem(KEYS.SHIFTS, JSON.stringify(updated));

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../../data/store';
 import { useAuthStore } from '../../auth/store';
@@ -9,22 +9,27 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 
-// Mock ID for current logged in agent (Pieter) matching seed data
-const CURRENT_AGENT_ID = '2'; 
 
 export const AgentDashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const CURRENT_AGENT_ID = user?.employeeId ?? '';
   const { shifts, employees, updates } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // --- DATA LOGIC (LIVE FROM STORE) ---
-  
+
   const now = new Date();
 
   // 1. Current Agent Data
-  const currentAgent = useMemo(() => employees.find(e => e.id === CURRENT_AGENT_ID), [employees]);
+  const currentAgent = useMemo(() => employees.find(e => e.id === CURRENT_AGENT_ID), [employees, CURRENT_AGENT_ID]);
 
   // 2. My Shifts (Live filter from store)
   const myShifts = useMemo(() => 
@@ -166,6 +171,13 @@ export const AgentDashboardPage: React.FC = () => {
           <h1 className="text-2xl font-black text-white uppercase tracking-tight">
             WELKOM, {getFirstName()}
           </h1>
+          {/* Live Clock */}
+          <div className="mt-2 font-mono text-4xl font-black text-apex-gold tracking-tight leading-none">
+            {currentTime.toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          </div>
+          <div className="text-xs text-zinc-500 font-mono uppercase tracking-wider mt-1">
+            {currentTime.toLocaleDateString('nl-BE', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </div>
           
           {/* Futuristic Status Pill */}
           <div className="mt-3 inline-flex items-center gap-3 bg-zinc-900/80 border border-zinc-800 rounded-full py-1.5 px-4 backdrop-blur-md shadow-sm">
