@@ -146,7 +146,7 @@ export const SettingsPage: React.FC = () => {
       {/* PRICING */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
         <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><DollarSign className="w-5 h-5 text-apex-gold" /> Tarieven</h3>
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
            <div><label className="text-xs text-zinc-500 block">Nachtfactor</label><input type="number" step="0.1" value={factors.night} onChange={e=>setFactors({...factors, night: parseFloat(e.target.value)})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white" /></div>
            <div><label className="text-xs text-zinc-500 block">BTW %</label><input type="number" value={factors.vat} onChange={e=>setFactors({...factors, vat: parseFloat(e.target.value)})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white" /></div>
            <div><label className="text-xs text-zinc-500 block">Min Uren</label><input type="number" value={factors.minHours} onChange={e=>setFactors({...factors, minHours: parseFloat(e.target.value)})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white" /></div>
@@ -203,7 +203,7 @@ export const SettingsPage: React.FC = () => {
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
           <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2"><Mail className="w-5 h-5 text-apex-gold" /> E-mail (SMTP)</h3>
           <p className="text-zinc-500 text-xs mb-4">Ingesteld voor one.com. Vul enkel uw wachtwoord in en klik Opslaan.</p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                   <label className="text-xs text-zinc-500 block mb-1">SMTP Host</label>
                   <input type="text" value={smtp.host} onChange={e=>setSmtp({...smtp, host:e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm" />
@@ -252,33 +252,6 @@ export const SettingsPage: React.FC = () => {
           </button>
       </div>
 
-      {/* RESET */}
-      <div className="bg-zinc-900 border border-red-900/40 rounded-lg p-6">
-          <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              <Trash2 className="w-5 h-5 text-red-500" /> Alle Data Wissen
-          </h3>
-          <p className="text-zinc-400 text-sm mb-4">
-              Verwijdert alle lokale data: medewerkers, shifts, klanten, incidenten, rapporten en tijdregistraties. De app start opnieuw leeg op. Dit kan niet ongedaan worden gemaakt.
-          </p>
-          <button
-              onClick={() => {
-                  if (confirm('Ben je zeker? Alle data wordt permanent gewist en de pagina wordt herladen.')) {
-                      const keysToRemove = [
-                          'apex_employees', 'apex_shifts_v2', 'apex_applications_v2',
-                          'apex_incidents', 'apex_clients', 'apex_locations',
-                          'apex_reports', 'apex_timelogs_v2', 'apex_system_updates',
-                          'apex_billing_invoices_v2', 'apex_billing_overrides_v2',
-                          'apex_billing_config_v2'
-                      ];
-                      keysToRemove.forEach(k => localStorage.removeItem(k));
-                      window.location.reload();
-                  }
-              }}
-              className="bg-red-600 hover:bg-red-500 text-white px-5 py-2.5 rounded font-bold flex items-center gap-2 transition-colors"
-          >
-              <RefreshCw className="w-4 h-4" /> Reset & Herlaad
-          </button>
-      </div>
     </div>
   );
 };

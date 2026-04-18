@@ -112,24 +112,24 @@ export const ShiftsPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-white uppercase tracking-tight">{t('shifts.title')}</h2>
           <p className="text-zinc-400 mt-1">{t('shifts.subtitle')}</p>
         </div>
-        <div className="flex gap-2">
-            <button 
-                onClick={handleDownload} 
-                className="bg-zinc-800 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 border border-zinc-700 hover:bg-zinc-700 transition-colors"
+        <div className="flex flex-wrap gap-2">
+            <button
+                onClick={handleDownload}
+                className="bg-zinc-800 text-white px-3 py-2 rounded-lg font-bold flex items-center gap-2 border border-zinc-700 hover:bg-zinc-700 transition-colors text-sm"
             >
-                <Download className="w-4 h-4" /> Download PDF
+                <Download className="w-4 h-4" /><span className="hidden sm:inline">Download </span>PDF
             </button>
-            <button 
-                onClick={handlePrint} 
-                className="bg-zinc-800 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 border border-zinc-700 hover:bg-zinc-700 transition-colors"
+            <button
+                onClick={handlePrint}
+                className="bg-zinc-800 text-white px-3 py-2 rounded-lg font-bold flex items-center gap-2 border border-zinc-700 hover:bg-zinc-700 transition-colors text-sm"
             >
-                <Printer className="w-4 h-4" /> Afdrukken
+                <Printer className="w-4 h-4" /><span className="hidden sm:inline">Afdrukken</span>
             </button>
-            <button 
+            <button
                onClick={() => setIsNewModalOpen(true)}
-               className="bg-apex-gold hover:bg-yellow-500 text-black border border-yellow-600 px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors shadow-lg shadow-apex-gold/20"
+               className="bg-apex-gold hover:bg-yellow-500 text-black border border-yellow-600 px-3 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors shadow-lg shadow-apex-gold/20 text-sm"
             >
-               <Plus className="w-5 h-5" /> Nieuwe Shift
+               <Plus className="w-4 h-4" /> Nieuwe Shift
             </button>
         </div>
       </div>

@@ -7,6 +7,9 @@ import { useStore } from '../data/store';
 import { useAuthStore } from '../modules/auth/store';
 import { Globe, Menu, LogOut } from 'lucide-react';
 
+const getInitials = (name: string) =>
+  name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
 interface HeaderProps {
   onToggleSidebar: () => void;
 }
@@ -14,7 +17,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const { i18n } = useTranslation();
   const { language, setLanguage, brandLogoBase64 } = useStore();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const navigate = useNavigate();
   
   const toggleLanguage = () => {
@@ -64,17 +67,18 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         </div>
 
         {/* Right: Language, Profile & Logout */}
-        <div className="flex items-center space-x-4">
-          <button 
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <button
             onClick={toggleLanguage}
-            className="flex items-center space-x-2 text-zinc-400 hover:text-apex-gold transition-colors border border-zinc-700 rounded px-3 py-1"
+            className="flex items-center space-x-1 text-zinc-400 hover:text-apex-gold transition-colors border border-zinc-700 rounded px-2 py-1"
+            title="Taal wisselen"
           >
             <Globe className="w-4 h-4" />
-            <span className="uppercase font-bold text-sm">{language.toUpperCase()}</span>
+            <span className="uppercase font-bold text-xs hidden sm:inline">{language.toUpperCase()}</span>
           </button>
           
-          <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center text-apex-gold border border-apex-gold font-bold shadow-sm shadow-apex-gold/20 cursor-default">
-            A
+          <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center text-apex-gold border border-apex-gold font-bold text-xs shadow-sm shadow-apex-gold/20 cursor-default" title={user?.username}>
+            {user ? getInitials(user.username) : '?'}
           </div>
 
           <button 

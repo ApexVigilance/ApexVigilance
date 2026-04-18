@@ -123,22 +123,6 @@ export const LoginPage: React.FC = () => {
             </button>
           </form>
 
-          {/* Role hint */}
-          <div className="mt-6 pt-5 border-t border-zinc-800 space-y-1.5">
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold mb-2">Standaard toegang</p>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-500">Admin</span>
-              <span className="font-mono text-zinc-400">admin / admin</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-500">Agent</span>
-              <span className="text-zinc-600 italic">Ingesteld door admin</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-500">Klant</span>
-              <span className="text-zinc-600 italic">Ingesteld door admin</span>
-            </div>
-          </div>
         </div>
 
         <div className="mt-6 text-center text-zinc-700 text-xs font-mono">

@@ -166,24 +166,24 @@ export const PlanningPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-white uppercase tracking-tight">{t('planning.title')}</h2>
           <p className="text-zinc-400 mt-1">Beheer shifts en personeelsplanning</p>
         </div>
-        <div className="flex gap-2">
-          <button 
+        <div className="flex flex-wrap gap-2">
+          <button
             onClick={handleDownload}
-            className="bg-zinc-800 text-white px-4 py-2 rounded font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700"
+            className="bg-zinc-800 text-white px-3 py-2 rounded font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700 text-sm"
           >
-            <Download className="w-4 h-4" /> Download PDF
+            <Download className="w-4 h-4" /><span className="hidden sm:inline">Download </span>PDF
           </button>
-          <button 
+          <button
             onClick={handlePrint}
-            className="bg-zinc-800 text-white px-4 py-2 rounded font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700"
+            className="bg-zinc-800 text-white px-3 py-2 rounded font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700 text-sm"
           >
-            <Printer className="w-4 h-4" /> Afdrukken
+            <Printer className="w-4 h-4" /><span className="hidden sm:inline">Afdrukken</span>
           </button>
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-apex-gold text-black px-4 py-2 rounded font-bold hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-apex-gold/20"
+            className="bg-apex-gold text-black px-3 py-2 rounded font-bold hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-apex-gold/20 text-sm"
           >
-            <Plus className="w-5 h-5" /> Nieuwe Shift
+            <Plus className="w-4 h-4" /> Nieuwe Shift
           </button>
         </div>
       </div>

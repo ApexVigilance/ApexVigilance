@@ -163,23 +163,23 @@ export const TijdregistratiesPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-white uppercase tracking-tight">{t('tijd.title')}</h2>
           <p className="text-zinc-400 mt-1">{t('tijd.subtitle')}</p>
         </div>
-        <div className="flex gap-2">
-          <button 
+        <div className="flex flex-wrap gap-2">
+          <button
             onClick={handleDownloadPdf}
-            className="bg-zinc-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700"
+            className="bg-zinc-800 text-white px-3 py-2 rounded-lg font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700 text-sm"
           >
-            <Download className="w-4 h-4" /> Download PDF
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">Download </span>PDF
           </button>
-          <button 
+          <button
             onClick={handleOpenPdf}
             className="bg-zinc-800 text-white px-3 py-2 rounded-lg font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-zinc-700"
             title="Open PDF in nieuwe tab"
           >
             <FileText className="w-4 h-4" />
           </button>
-          <button 
+          <button
             onClick={() => setIsTerminalModalOpen(true)}
-            className="bg-apex-gold text-black px-4 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-apex-gold/20"
+            className="bg-apex-gold text-black px-3 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-apex-gold/20 text-sm"
           >
             <Clock className="w-4 h-4" /> {t('tijd.manualReg')}
           </button>

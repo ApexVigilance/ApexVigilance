@@ -25,8 +25,12 @@ export const App: React.FC = () => {
   return (
     <>
       <style>{`
-        /* Global Modal Fix: Lift modals (z-50) above sticky headers (z-50) but keep below higher z-indexes (60+) */
         .fixed.z-50 { z-index: 55 !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media (max-width: 640px) {
+          .mobile-wrap { flex-wrap: wrap; }
+        }
       `}</style>
       <RouterProvider router={router} fallbackElement={<div>Loading...</div>} />
     </>
