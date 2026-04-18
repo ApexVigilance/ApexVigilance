@@ -14,14 +14,13 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   loginError: string | null;
-  // New unified login
   login: (username: string, password: string) => boolean;
-  // Legacy (kept for test scripts)
   loginAsAdmin: () => void;
   loginAsAgent: () => void;
   loginAsClient: (clientId: string, clientName: string) => void;
   logout: () => void;
   clearError: () => void;
+  resetIdleTimer: () => void;
 }
 
 const STORAGE_KEY = 'apex_auth_session';
@@ -41,13 +40,22 @@ const getAdminCredentials = (): { username: string; password: string } => {
   } catch { return { username: 'admin', password: 'admin' }; }
 };
 
+const SESSION_TIMEOUT_MS = 8 * 60 * 60 * 1000; // 8 hours
+const LAST_ACTIVE_KEY = 'apex_last_active';
+
 const setSession = (user: User) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  localStorage.setItem(LAST_ACTIVE_KEY, Date.now().toString());
+};
+
+const isSessionExpired = (): boolean => {
+  const lastActive = parseInt(localStorage.getItem(LAST_ACTIVE_KEY) || '0', 10);
+  return lastActive > 0 && Date.now() - lastActive > SESSION_TIMEOUT_MS;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: getUserFromStorage(),
-  isAuthenticated: !!getUserFromStorage(),
+  user: isSessionExpired() ? null : getUserFromStorage(),
+  isAuthenticated: !isSessionExpired() && !!getUserFromStorage(),
   loginError: null,
 
   login: (username: string, password: string): boolean => {
@@ -120,9 +128,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LAST_ACTIVE_KEY);
     set({ user: null, isAuthenticated: false, loginError: null });
   },
   clearError: () => set({ loginError: null }),
+  resetIdleTimer: () => {
+    localStorage.setItem(LAST_ACTIVE_KEY, Date.now().toString());
+  },
 }));
 
 export const ADMIN_CREDS_KEY_EXPORT = ADMIN_CREDS_KEY;

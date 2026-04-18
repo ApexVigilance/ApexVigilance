@@ -19,7 +19,7 @@ export const AgentTijdregistratiePage: React.FC = () => {
   const { timeLogs, shifts, logTimeEvent, createTimeLog } = useStore();
 
   // -- STATE --
-  const [activeTab, setActiveTab] = useState<'TODAY' | 'HISTORY'>('TODAY');
+  const [activeTab, setActiveTab] = useState<'TODAY' | 'HISTORY' | 'MAAND'>('TODAY');
   const [loadingLoc, setLoadingLoc] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -49,6 +49,31 @@ export const AgentTijdregistratiePage: React.FC = () => {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     [timeLogs, today]
   );
+
+  // Monthly hours stats
+  const monthlyStats = useMemo(() => {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    const weekStart = new Date(now.getTime() - now.getDay() * 86400000).toISOString().split('T')[0];
+
+    const myLogs = timeLogs.filter(l => l.employeeId === CURRENT_AGENT_ID && l.clockOut);
+
+    const calcHours = (logs: typeof myLogs) =>
+      logs.reduce((sum, l) => {
+        if (!l.clockOut) return sum;
+        return sum + (new Date(l.clockOut).getTime() - new Date(l.clockIn).getTime()) / 3600000;
+      }, 0);
+
+    const monthLogs = myLogs.filter(l => l.date >= monthStart);
+    const weekLogs = myLogs.filter(l => l.date >= weekStart);
+
+    return {
+      monthHours: calcHours(monthLogs),
+      weekHours: calcHours(weekLogs),
+      monthShifts: monthLogs.length,
+      monthLogs: monthLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    };
+  }, [timeLogs, CURRENT_AGENT_ID]);
 
   const activeShift = useMemo(() => {
     if (activeLog?.shiftId) return shifts.find(s => s.id === activeLog.shiftId);
@@ -309,6 +334,17 @@ export const AgentTijdregistratiePage: React.FC = () => {
           )}
         >
           {t('tijd.agent.history')}
+        </button>
+        <button
+          onClick={() => setActiveTab('MAAND')}
+          className={clsx(
+            'flex-1 py-2.5 text-xs font-bold uppercase tracking-wide rounded-lg transition-all',
+            activeTab === 'MAAND'
+              ? 'bg-zinc-800 text-white shadow border border-zinc-700'
+              : 'text-zinc-500 hover:text-zinc-300'
+          )}
+        >
+          Maand
         </button>
       </div>
 
@@ -600,6 +636,59 @@ export const AgentTijdregistratiePage: React.FC = () => {
               );
             })
           )}
+        </div>
+      )}
+
+      {/* ---- MAAND TAB ---- */}
+      {activeTab === 'MAAND' && (
+        <div className="space-y-5">
+          {/* Stats summary */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 text-center">
+              <div className="text-3xl font-black text-apex-gold">{monthlyStats.monthHours.toFixed(1)}</div>
+              <div className="text-[10px] text-zinc-500 uppercase font-bold mt-1">Uren deze maand</div>
+            </div>
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 text-center">
+              <div className="text-3xl font-black text-blue-400">{monthlyStats.weekHours.toFixed(1)}</div>
+              <div className="text-[10px] text-zinc-500 uppercase font-bold mt-1">Uren deze week</div>
+            </div>
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 text-center">
+              <div className="text-3xl font-black text-green-400">{monthlyStats.monthShifts}</div>
+              <div className="text-[10px] text-zinc-500 uppercase font-bold mt-1">Shifts</div>
+            </div>
+          </div>
+
+          {/* Monthly log breakdown */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Overzicht {new Date().toLocaleDateString('nl-BE', { month: 'long', year: 'numeric' })}</h3>
+            {monthlyStats.monthLogs.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed border-zinc-800 rounded-2xl">
+                <History className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+                <p className="text-zinc-500 text-sm italic">Geen registraties deze maand.</p>
+              </div>
+            ) : monthlyStats.monthLogs.map(log => {
+              const shift = shifts.find(s => s.id === log.shiftId);
+              const hours = log.clockOut
+                ? ((new Date(log.clockOut).getTime() - new Date(log.clockIn).getTime()) / 3600000).toFixed(2)
+                : '--';
+              return (
+                <div key={log.id} className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white text-sm">
+                      {new Date(log.date).toLocaleDateString('nl-BE', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    </div>
+                    {shift && <div className="text-xs text-zinc-500 mt-0.5">{shift.clientName} • {shift.location}</div>}
+                  </div>
+                  <div className="text-right">
+                    <div className="font-mono font-black text-apex-gold">{hours}u</div>
+                    <div className="text-[10px] text-zinc-500 font-mono">
+                      {formatTime(log.clockIn)} – {formatTime(log.clockOut)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

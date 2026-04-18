@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { useStore } from '../../data/store';
+import { useAuthStore } from '../auth/store';
 import { ServiceType, DayType } from '../../data/types';
-import { Save, Settings, Mail, DollarSign, FileText, Upload, Image as ImageIcon, Trash2, AlertTriangle, RefreshCw, KeyRound, Eye, EyeOff } from 'lucide-react';
+import { Save, Settings, Mail, DollarSign, FileText, Upload, Image as ImageIcon, Trash2, AlertTriangle, RefreshCw, KeyRound, Eye, EyeOff, Download } from 'lucide-react';
 
 const ADMIN_CREDS_KEY = 'apex_admin_credentials';
 const getAdminCreds = () => {
@@ -11,6 +12,7 @@ const getAdminCreds = () => {
 };
 
 export const SettingsPage: React.FC = () => {
+  const { user } = useAuthStore();
   const { pricingConfig, savePricingConfig, saveSmtpConfig, brandLogoBase64, saveBrandLogo, invoiceTemplateBase64, saveInvoiceTemplate } = useStore();
 
   const [matrix, setMatrix] = useState(pricingConfig.matrix);
@@ -30,6 +32,8 @@ export const SettingsPage: React.FC = () => {
   // Reset confirmation state
   const [resetText, setResetText] = useState('');
   const RESET_CONFIRM_PHRASE = 'VERWIJDER ALLES';
+
+  if (user?.role !== 'admin') return null;
 
   const handleSaveAdminCreds = () => {
     if (!adminCreds.username || !adminCreds.password) return;
@@ -59,6 +63,26 @@ export const SettingsPage: React.FC = () => {
   const handleSaveSmtp = () => {
     saveSmtpConfig(smtp);
     alert('SMTP opgeslagen.');
+  };
+
+  const handleBackupDownload = () => {
+    const backupKeys = [
+      'apex_employees', 'apex_shifts_v2', 'apex_applications_v2',
+      'apex_incidents', 'apex_clients', 'apex_reports',
+      'apex_timelogs_v2', 'apex_system_updates', 'apex_billing_invoices_v2',
+      'apex_billing_overrides_v2', 'apex_billing_config_v2', 'apex_admin_credentials'
+    ];
+    const backup: Record<string, any> = { exportedAt: new Date().toISOString(), version: '1.1' };
+    backupKeys.forEach(k => {
+      try { backup[k] = JSON.parse(localStorage.getItem(k) || 'null'); } catch { backup[k] = null; }
+    });
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `apex-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleTemplateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,6 +280,22 @@ export const SettingsPage: React.FC = () => {
               </div>
           </div>
           <button onClick={handleSaveSmtp} className="mt-4 bg-apex-gold text-black px-4 py-2 rounded font-bold flex items-center gap-2"><Save className="w-4 h-4"/> Opslaan</button>
+      </div>
+
+      {/* BACKUP */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
+        <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <Download className="w-5 h-5 text-apex-gold" /> Automatische Back-up
+        </h3>
+        <p className="text-zinc-500 text-sm mb-4">
+          Download alle data als JSON-bestand. Bewaar dit bestand op een veilige locatie. Bij een browser-reset of dataverlies kunt u contact opnemen voor hulp bij herstel.
+        </p>
+        <button
+          onClick={handleBackupDownload}
+          className="bg-zinc-700 hover:bg-zinc-600 text-white px-5 py-2.5 rounded font-bold flex items-center gap-2 transition-colors"
+        >
+          <Download className="w-4 h-4" /> Back-up downloaden
+        </button>
       </div>
 
       {/* RESET */}

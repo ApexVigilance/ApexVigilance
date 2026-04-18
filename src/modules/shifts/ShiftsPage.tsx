@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useStore, getGroupKey } from '../../data/store'; 
+import { useStore, getGroupKey } from '../../data/store';
 import { ShiftCard } from './components/ShiftCard';
 import { NewShiftModal } from './components/NewShiftModal';
-import { Filter, Search, Plus, Download, Printer } from 'lucide-react';
+import { Filter, Search, Plus, Download, Printer, CheckSquare, Trash2, XCircle, Square } from 'lucide-react';
 import clsx from 'clsx';
 import { generateShiftsListPdf } from './utils/generateShiftsPdf';
 import { downloadPdf } from '../../utils/pdf/pdfCore';
@@ -13,11 +13,13 @@ import { printPdfBlob } from '../../utils/pdf/printPdf';
 export const ShiftsPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { shifts, applications } = useStore(); 
+  const { shifts, applications, updateShiftGroup, deleteShift } = useStore();
   
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'OPEN' | 'SCHEDULED' | 'ACTIVE' | 'COMPLETED' | 'ISSUES'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedGroupIds, setSelectedGroupIds] = useState<Set<string>>(new Set());
 
   // Group Shifts by Client+Location+Start+End to form a "Job" card
   const groupedShifts = useMemo(() => {
@@ -88,6 +90,41 @@ export const ShiftsPage: React.FC = () => {
     printPdfBlob(blob);
   };
 
+  const toggleSelect = (id: string) => {
+    setSelectedGroupIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const handleBulkCancel = () => {
+    if (!confirm(`${selectedGroupIds.size} shift(s) annuleren?`)) return;
+    const groups = filteredGroups.filter(g => selectedGroupIds.has(g.id));
+    groups.forEach(g => {
+      const ids = shifts.filter(s =>
+        s.clientName === g.data.clientName && s.location === g.data.location &&
+        s.startTime === g.data.startTime && s.endTime === g.data.endTime
+      ).map(s => s.id);
+      updateShiftGroup(ids, { status: 'Cancelled' });
+    });
+    setSelectedGroupIds(new Set());
+    setSelectionMode(false);
+  };
+
+  const handleBulkDelete = () => {
+    if (!confirm(`${selectedGroupIds.size} shift(s) definitief verwijderen?`)) return;
+    const groups = filteredGroups.filter(g => selectedGroupIds.has(g.id));
+    groups.forEach(g => {
+      shifts.filter(s =>
+        s.clientName === g.data.clientName && s.location === g.data.location &&
+        s.startTime === g.data.startTime && s.endTime === g.data.endTime
+      ).forEach(s => deleteShift(s.id));
+    });
+    setSelectedGroupIds(new Set());
+    setSelectionMode(false);
+  };
+
   const FilterChip = ({ id, label, count }: { id: typeof activeFilter, label: string, count: number }) => (
     <button
       onClick={() => setActiveFilter(id)}
@@ -124,6 +161,12 @@ export const ShiftsPage: React.FC = () => {
                 className="bg-zinc-800 text-white px-3 py-2 rounded-lg font-bold flex items-center gap-2 border border-zinc-700 hover:bg-zinc-700 transition-colors text-sm"
             >
                 <Printer className="w-4 h-4" /><span className="hidden sm:inline">Afdrukken</span>
+            </button>
+            <button
+               onClick={() => { setSelectionMode(m => !m); setSelectedGroupIds(new Set()); }}
+               className={clsx("px-3 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors text-sm border", selectionMode ? "bg-apex-gold text-black border-yellow-600" : "bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700")}
+            >
+               <CheckSquare className="w-4 h-4" /><span className="hidden sm:inline">Selecteren</span>
             </button>
             <button
                onClick={() => setIsNewModalOpen(true)}
@@ -169,20 +212,49 @@ export const ShiftsPage: React.FC = () => {
             </button>
          </div>
       ) : (
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-            {filteredGroups.map(group => (
-               <ShiftCard 
-                  key={group.id}
-                  shift={{ ...group.data, status: group.status }} // Pass representative status
-                  totalSlots={group.total}
-                  filledSlots={group.assigned}
-                  openSlots={group.total - group.assigned}
-                  isOvernight={group.isOvernight}
-                  complianceStatus={group.compliance}
-                  pendingCount={group.pendingCount} 
-               />
-            ))}
-         </div>
+         <>
+           {/* Bulk Action Bar */}
+           {selectionMode && selectedGroupIds.size > 0 && (
+             <div className="sticky top-20 z-30 flex items-center gap-3 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 mb-4 shadow-2xl">
+               <span className="text-white font-bold text-sm flex-1">{selectedGroupIds.size} geselecteerd</span>
+               <button onClick={handleBulkCancel} className="flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+                 <XCircle className="w-4 h-4" /> Annuleren
+               </button>
+               <button onClick={handleBulkDelete} className="flex items-center gap-2 bg-red-800 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+                 <Trash2 className="w-4 h-4" /> Verwijderen
+               </button>
+               <button onClick={() => setSelectedGroupIds(new Set())} className="text-zinc-500 hover:text-white text-xs underline">Deselecteer</button>
+             </div>
+           )}
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+              {filteredGroups.map(group => (
+                 <div key={group.id} className="relative">
+                   {selectionMode && (
+                     <button
+                       onClick={() => toggleSelect(group.id)}
+                       className={clsx(
+                         "absolute top-2 left-2 z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-colors shadow-lg",
+                         selectedGroupIds.has(group.id)
+                           ? "bg-apex-gold border-apex-gold text-black"
+                           : "bg-zinc-900 border-zinc-600 text-zinc-500 hover:border-apex-gold"
+                       )}
+                     >
+                       {selectedGroupIds.has(group.id) ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
+                     </button>
+                   )}
+                   <ShiftCard
+                      shift={{ ...group.data, status: group.status }}
+                      totalSlots={group.total}
+                      filledSlots={group.assigned}
+                      openSlots={group.total - group.assigned}
+                      isOvernight={group.isOvernight}
+                      complianceStatus={group.compliance}
+                      pendingCount={group.pendingCount}
+                   />
+                 </div>
+              ))}
+           </div>
+         </>
       )}
 
       <NewShiftModal isOpen={isNewModalOpen} onClose={() => setIsNewModalOpen(false)} />

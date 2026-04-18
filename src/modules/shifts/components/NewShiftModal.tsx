@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, Plus, Calendar, Clock, MapPin, Users, ShieldCheck } from 'lucide-react';
+import { X, Plus, Calendar, Clock, MapPin, Users, ShieldCheck, RefreshCw } from 'lucide-react';
 import { useStore } from '../../../data/store';
 import { Shift } from '../../../data/types';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,9 @@ export const NewShiftModal: React.FC<NewShiftModalProps> = ({ isOpen, onClose })
     endTime: '16:00',
     agentsNeeded: 1,
     requiredRole: 'Guard',
-    briefing: ''
+    briefing: '',
+    recurring: false,
+    recurringWeeks: 4
   });
 
   if (!isOpen) return null;
@@ -40,23 +42,28 @@ export const NewShiftModal: React.FC<NewShiftModalProps> = ({ isOpen, onClose })
     }
 
     const newShifts: Shift[] = [];
-    
-    // Generate one shared UUID for this batch
-    const groupId = `GRP-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-    
-    for (let i = 0; i < formData.agentsNeeded; i++) {
-      newShifts.push({
-        id: `SHIFT-${Date.now()}-${i}`,
-        groupId: groupId,
-        clientName: formData.clientName,
-        location: formData.location,
-        startTime: startIso,
-        endTime: endIso,
-        employeeId: '', // Open slot
-        status: 'Scheduled',
-        requiredRole: formData.requiredRole as any,
-        briefing: formData.briefing
-      });
+    const totalWeeks = formData.recurring ? formData.recurringWeeks : 1;
+
+    for (let week = 0; week < totalWeeks; week++) {
+      const groupId = `GRP-${Date.now()}-W${week}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      const offsetMs = week * 7 * 24 * 60 * 60 * 1000;
+      const weekStartIso = new Date(new Date(startIso).getTime() + offsetMs).toISOString().replace('Z', '').split('.')[0];
+      const weekEndIso = new Date(new Date(endIso).getTime() + offsetMs).toISOString().replace('Z', '').split('.')[0];
+
+      for (let i = 0; i < formData.agentsNeeded; i++) {
+        newShifts.push({
+          id: `SHIFT-${Date.now()}-W${week}-${i}`,
+          groupId,
+          clientName: formData.clientName,
+          location: formData.location,
+          startTime: weekStartIso,
+          endTime: weekEndIso,
+          employeeId: '',
+          status: 'Scheduled',
+          requiredRole: formData.requiredRole as any,
+          briefing: formData.briefing
+        });
+      }
     }
 
     createShifts(newShifts);
@@ -70,7 +77,9 @@ export const NewShiftModal: React.FC<NewShiftModalProps> = ({ isOpen, onClose })
       endTime: '16:00',
       agentsNeeded: 1,
       requiredRole: 'Guard',
-      briefing: ''
+      briefing: '',
+      recurring: false,
+      recurringWeeks: 4
     });
   };
 
@@ -184,6 +193,38 @@ export const NewShiftModal: React.FC<NewShiftModalProps> = ({ isOpen, onClose })
                    <option value="Senior">{t('roles.senior')}</option>
                 </select>
              </div>
+          </div>
+
+          {/* Recurring */}
+          <div className="border-t border-zinc-800 pt-4">
+            <label className="flex items-center gap-3 cursor-pointer mb-3">
+              <input
+                type="checkbox"
+                checked={formData.recurring}
+                onChange={e => setFormData({...formData, recurring: e.target.checked})}
+                className="accent-apex-gold w-4 h-4"
+              />
+              <div className="flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 text-apex-gold" />
+                <span className="text-sm font-bold text-white">Herhalende shift (wekelijks)</span>
+              </div>
+            </label>
+            {formData.recurring && (
+              <div>
+                <label className="block text-xs text-zinc-500 mb-1">Aantal weken herhalen</label>
+                <input
+                  type="number"
+                  min="2"
+                  max="52"
+                  value={formData.recurringWeeks}
+                  onChange={e => setFormData({...formData, recurringWeeks: parseInt(e.target.value) || 4})}
+                  className="w-32 bg-zinc-950 border border-zinc-800 rounded p-2 text-white text-sm"
+                />
+                <p className="text-xs text-zinc-600 mt-1">
+                  Maakt {formData.recurringWeeks} × {formData.agentsNeeded} = {formData.recurringWeeks * formData.agentsNeeded} shifts aan
+                </p>
+              </div>
+            )}
           </div>
 
           <div>

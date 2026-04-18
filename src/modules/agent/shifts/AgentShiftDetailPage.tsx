@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../../../data/store';
 import { useAuthStore } from '../../auth/store';
-import { MapPin, Clock, Calendar, ChevronLeft, Shield, Info, CheckCircle, XCircle, FileQuestion, RotateCcw, FileText } from 'lucide-react';
+import { MapPin, Clock, Calendar, ChevronLeft, Shield, Info, CheckCircle, XCircle, FileQuestion, RotateCcw, FileText, Navigation } from 'lucide-react';
 import clsx from 'clsx';
 
 
@@ -14,6 +14,7 @@ export const AgentShiftDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { shifts, applications, applyForShift, withdrawApplication, unclaimShift } = useStore();
   const [loading, setLoading] = useState(false);
+  const [briefingConfirmed, setBriefingConfirmed] = useState(false);
 
   const criteria = useMemo(() => {
     try {
@@ -97,8 +98,18 @@ export const AgentShiftDetailPage: React.FC = () => {
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         
         <h1 className="text-2xl font-black text-white uppercase leading-tight mb-1">{first.clientName}</h1>
-        <div className="flex items-center gap-1.5 text-zinc-400 text-sm mb-6">
-          <MapPin className="w-4 h-4" /> {first.location}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-1.5 text-zinc-400 text-sm">
+            <MapPin className="w-4 h-4" /> {first.location}
+          </div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(first.location)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-900/20 border border-blue-900/40 px-3 py-1.5 rounded-full transition-colors"
+          >
+            <Navigation className="w-3.5 h-3.5" /> Route
+          </a>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
@@ -166,16 +177,28 @@ export const AgentShiftDetailPage: React.FC = () => {
         )}
       </div>
 
-      {/* Instructions */}
+      {/* Instructions + Briefing Confirmation */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-24">
          <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-            <Shield className="w-5 h-5 text-blue-500" /> Instructies
+            <Shield className="w-5 h-5 text-blue-500" /> Instructies & Briefing
          </h3>
-         <div className="text-zinc-400 text-sm leading-relaxed whitespace-pre-wrap">
-            {/* Hardcoded instruction for demo, usually from shift.details */}
-            Meld je aan bij de receptie voor aanvang dienst. Draag correct uniform en zichtbare badge. 
-            Zorg dat je 15 minuten op voorhand aanwezig bent.
+         <div className="text-zinc-400 text-sm leading-relaxed whitespace-pre-wrap mb-5">
+            {first.briefing || 'Meld je aan bij de receptie voor aanvang dienst. Draag correct uniform en zichtbare badge. Zorg dat je 15 minuten op voorhand aanwezig bent.'}
          </div>
+         <label className={clsx(
+           "flex items-start gap-3 cursor-pointer p-3 rounded-xl border transition-colors",
+           briefingConfirmed ? "bg-green-900/20 border-green-700/40" : "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
+         )}>
+           <input
+             type="checkbox"
+             checked={briefingConfirmed}
+             onChange={e => setBriefingConfirmed(e.target.checked)}
+             className="mt-0.5 accent-green-500"
+           />
+           <span className={clsx("text-sm font-bold", briefingConfirmed ? "text-green-400" : "text-zinc-400")}>
+             Ik heb de briefing gelezen en begrepen
+           </span>
+         </label>
       </div>
 
       {/* Floating Action Bar */}

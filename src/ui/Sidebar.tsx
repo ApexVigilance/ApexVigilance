@@ -2,17 +2,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { 
-  LayoutDashboard, 
-  Users, 
-  CalendarDays, 
-  ShieldAlert, 
-  Clock, 
-  FileText, 
-  AlertTriangle, 
-  MapPin, 
+import { useAuthStore } from '../modules/auth/store';
+import {
+  LayoutDashboard,
+  Users,
+  CalendarDays,
+  ShieldAlert,
+  Clock,
+  FileText,
+  AlertTriangle,
+  MapPin,
   FileCheck,
-  Settings 
+  Settings
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -23,6 +24,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
 
   const navItems = [
     { path: '/', label: 'nav.dashboard', icon: LayoutDashboard },
@@ -75,19 +77,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           })}
         </nav>
         
-        {/* Settings Link */}
+        {/* Settings Link (admin only) */}
         <div className="p-4 border-t border-zinc-800">
-           <NavLink
-              to="/settings"
-              onClick={onClose}
-              className={({ isActive }) => clsx(
-                "flex items-center space-x-3 px-4 py-3 rounded-md transition-all duration-200 group",
-                isActive ? "text-white bg-zinc-900" : "text-zinc-500 hover:text-white"
-              )}
-           >
-              <Settings className="w-5 h-5" />
-              <span className="font-medium text-sm">Instellingen</span>
-           </NavLink>
+           {user?.role === 'admin' && (
+             <NavLink
+                to="/settings"
+                onClick={onClose}
+                className={({ isActive }) => clsx(
+                  "flex items-center space-x-3 px-4 py-3 rounded-md transition-all duration-200 group",
+                  isActive ? "text-white bg-zinc-900" : "text-zinc-500 hover:text-white"
+                )}
+             >
+                <Settings className="w-5 h-5" />
+                <span className="font-medium text-sm">Instellingen</span>
+             </NavLink>
+           )}
            <div className="mt-2 text-xs text-zinc-700 text-center uppercase tracking-widest">
              Apex Ops v1.1
            </div>

@@ -188,37 +188,34 @@ export const PlanningPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg mb-6 flex flex-wrap gap-4 items-center justify-between">
-         <div className="flex items-center gap-4">
-             <div className="flex bg-zinc-950 p-1 rounded border border-zinc-800">
-                {(['Today', 'Week', 'Month'] as const).map(f => (
-                   <button
-                      key={f}
-                      onClick={() => setFilterDate(f)}
-                      className={clsx(
-                         "px-4 py-1.5 text-xs font-bold uppercase rounded transition-colors",
-                         filterDate === f ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
-                      )}
-                   >
-                      {f === 'Today' ? 'Vandaag' : f === 'Week' ? 'Deze Week' : 'Deze Maand'}
-                   </button>
-                ))}
-             </div>
-             
-             <div className="h-6 w-px bg-zinc-800 hidden md:block" />
+      <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg mb-6 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+         <div className="flex bg-zinc-950 p-1 rounded border border-zinc-800 w-full sm:w-auto">
+            {(['Today', 'Week', 'Month'] as const).map(f => (
+               <button
+                  key={f}
+                  onClick={() => setFilterDate(f)}
+                  className={clsx(
+                     "flex-1 sm:flex-none px-3 py-1.5 text-xs font-bold uppercase rounded transition-colors",
+                     filterDate === f ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+                  )}
+               >
+                  <span className="sm:hidden">{f === 'Today' ? 'Vandaag' : f === 'Week' ? 'Week' : 'Maand'}</span>
+                  <span className="hidden sm:inline">{f === 'Today' ? 'Vandaag' : f === 'Week' ? 'Deze Week' : 'Deze Maand'}</span>
+               </button>
+            ))}
+         </div>
 
-             <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-zinc-500" />
-                <select 
-                    value={filterStatus}
-                    onChange={e => setFilterStatus(e.target.value as any)}
-                    className="bg-zinc-950 border border-zinc-800 rounded px-3 py-1.5 text-sm text-white focus:border-apex-gold outline-none"
-                >
-                    <option value="All">Alle Statussen</option>
-                    <option value="Open">Openstaand</option>
-                    <option value="Full">Volzet</option>
-                </select>
-             </div>
+         <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Filter className="w-4 h-4 text-zinc-500 shrink-0" />
+            <select
+                value={filterStatus}
+                onChange={e => setFilterStatus(e.target.value as any)}
+                className="flex-1 sm:flex-none bg-zinc-950 border border-zinc-800 rounded px-3 py-1.5 text-sm text-white focus:border-apex-gold outline-none"
+            >
+                <option value="All">Alle Statussen</option>
+                <option value="Open">Openstaand</option>
+                <option value="Full">Volzet</option>
+            </select>
          </div>
       </div>
 
