@@ -14,7 +14,6 @@ export const LoginPage: React.FC = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Already logged in — redirect
   React.useEffect(() => {
     if (isAuthenticated && user) {
       if (user.role === 'admin') navigate('/', { replace: true });
@@ -28,7 +27,7 @@ export const LoginPage: React.FC = () => {
     if (!username || !password) return;
     clearError();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 400)); // small UX delay
+    await new Promise(r => setTimeout(r, 400));
     const ok = login(username, password);
     setLoading(false);
     if (ok) {
@@ -40,56 +39,56 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 text-white relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-600/8 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-600/8 rounded-full blur-[120px] pointer-events-none" />
+    <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(113,112,255,0.12),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(94,106,210,0.10),transparent_28%)] pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:36px_36px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-sm">
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-10">
+        <div className="flex flex-col items-center mb-10 text-center">
           {brandLogoBase64 ? (
-            <img src={brandLogoBase64} alt="Logo" className="h-20 object-contain mb-5" />
+            <img src={brandLogoBase64} alt="Logo" className="h-20 object-contain mb-5 opacity-95" />
           ) : (
-            <div className="w-16 h-16 bg-zinc-950 border-2 border-yellow-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-yellow-600/20">
-              <span className="text-3xl font-black text-yellow-500">A</span>
+            <div className="w-16 h-16 rounded-2xl border border-white/10 bg-[#0f1011] flex items-center justify-center mb-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
+              <span className="text-3xl font-semibold text-[#f7f8f8]">A</span>
             </div>
           )}
-          <h1 className="text-2xl font-black uppercase tracking-widest text-white">Apex Ops</h1>
-          <p className="text-zinc-500 text-sm mt-1">Beveiligingsbeheer platform</p>
+          <h1 className="text-[28px] font-semibold tracking-[0.22em] uppercase text-white">Apex Ops</h1>
+          <p className="text-[#8a8f98] text-sm mt-2">Beveiligingsbeheer platform</p>
         </div>
 
-        {/* Form */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-lg font-black text-white mb-6">Inloggen</h2>
+        <div className="rounded-2xl border border-white/8 bg-[#0f1011]/96 backdrop-blur-xl p-8 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_24px_60px_rgba(0,0,0,0.45)]">
+          <div className="mb-6">
+            <h2 className="text-xl font-medium text-white">Inloggen</h2>
+            <p className="text-sm text-[#8a8f98] mt-1">Toegang tot het operationeel platform.</p>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Error */}
             {loginError && (
-              <div className="bg-red-900/20 border border-red-800 rounded-lg px-4 py-3 flex items-center gap-2 text-sm text-red-400">
+              <div className="bg-red-500/10 border border-red-400/20 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-red-300">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 {loginError}
               </div>
             )}
 
-            {/* Username */}
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2">
                 Gebruikersnaam
               </label>
               <input
                 type="text"
                 autoComplete="username"
                 value={username}
-                onChange={e => { setUsername(e.target.value); clearError(); }}
+                onChange={e => {
+                  setUsername(e.target.value);
+                  clearError();
+                }}
                 placeholder="Voer uw gebruikersnaam in"
-                className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-3 text-white text-sm focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600/30 outline-none transition-all placeholder:text-zinc-600"
+                className="w-full bg-[#191a1b] border border-white/8 rounded-xl px-4 py-3 text-[#f7f8f8] text-sm outline-none transition-all placeholder:text-[#62666d] focus:border-[#7170ff] focus:ring-2 focus:ring-[#7170ff]/20"
               />
             </div>
 
-            {/* Password */}
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2">
                 Wachtwoord
               </label>
               <div className="relative">
@@ -97,35 +96,39 @@ export const LoginPage: React.FC = () => {
                   type={showPass ? 'text' : 'password'}
                   autoComplete="current-password"
                   value={password}
-                  onChange={e => { setPassword(e.target.value); clearError(); }}
+                  onChange={e => {
+                    setPassword(e.target.value);
+                    clearError();
+                  }}
                   placeholder="Voer uw wachtwoord in"
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-3 pr-11 text-white text-sm focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600/30 outline-none transition-all placeholder:text-zinc-600"
+                  className="w-full bg-[#191a1b] border border-white/8 rounded-xl px-4 py-3 pr-11 text-[#f7f8f8] text-sm outline-none transition-all placeholder:text-[#62666d] focus:border-[#7170ff] focus:ring-2 focus:ring-[#7170ff]/20"
                 />
-                <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors">
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a8f98] hover:text-[#d0d6e0] transition-colors"
+                >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={!username || !password || loading}
-              className="w-full bg-yellow-600 hover:bg-yellow-500 disabled:opacity-40 disabled:cursor-not-allowed text-black font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2 mt-2 shadow-lg shadow-yellow-600/20"
+              className="w-full bg-[#5e6ad2] hover:bg-[#7170ff] disabled:opacity-40 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2 mt-2 shadow-[0_10px_30px_rgba(94,106,210,0.22)]"
             >
               {loading ? (
-                <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <LogIn className="w-4 h-4" />
               )}
               {loading ? 'Bezig...' : 'Inloggen'}
             </button>
           </form>
-
         </div>
 
-        <div className="mt-6 text-center text-zinc-700 text-xs font-mono">
+        <div className="mt-6 text-center text-[#62666d] text-xs">
           Apex Vigilance Group &copy; {new Date().getFullYear()}
         </div>
       </div>
