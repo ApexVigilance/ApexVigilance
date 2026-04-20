@@ -46,14 +46,12 @@ export const LoginPage: React.FC = () => {
       <div className="relative z-10 w-full max-w-sm">
         <div className="flex flex-col items-center mb-10 text-center">
           {brandLogoBase64 ? (
-            <img src={brandLogoBase64} alt="Logo" className="h-20 object-contain mb-5 opacity-95" />
+            <img src={brandLogoBase64} alt="Logo" className="h-32 object-contain opacity-95" />
           ) : (
-            <div className="w-16 h-16 rounded-2xl border border-white/10 bg-[#0f1011] flex items-center justify-center mb-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
-              <span className="text-3xl font-semibold text-[#f7f8f8]">A</span>
+            <div className="w-24 h-24 rounded-3xl border border-white/10 bg-[#0f1011] flex items-center justify-center shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_0_40px_rgba(113,112,255,0.15)]">
+              <span className="text-5xl font-semibold text-[#f7f8f8]">A</span>
             </div>
           )}
-          <h1 className="text-[28px] font-semibold tracking-[0.22em] uppercase text-white">Apex Ops</h1>
-          <p className="text-[#8a8f98] text-sm mt-2">Beveiligingsbeheer platform</p>
         </div>
 
         <div className="rounded-2xl border border-white/8 bg-[#0f1011]/96 backdrop-blur-xl p-8 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_24px_60px_rgba(0,0,0,0.45)]">
