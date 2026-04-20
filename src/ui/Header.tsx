@@ -44,75 +44,71 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
   return (
     <>
-      <header className="h-16 bg-apex-black border-b border-zinc-800 px-6 flex items-center justify-between sticky top-0 z-50">
+      <header className="h-16 bg-[#08090a]/95 backdrop-blur-md border-b border-white/[0.06] px-6 flex items-center justify-between sticky top-0 z-50">
         {/* Left: Hamburger, Logo & Title */}
         <div className="flex items-center space-x-3">
-          <button 
+          <button
             onClick={onToggleSidebar}
-            className="text-zinc-400 hover:text-white mr-2 focus:outline-none md:hidden"
+            className="text-[#8a8f98] hover:text-white mr-2 focus:outline-none md:hidden"
             aria-label="Toggle Menu"
           >
             <Menu className="w-6 h-6" />
           </button>
 
-          <div 
-            className="relative cursor-pointer" 
-            onClick={() => navigate('/')}
-          >
+          <div className="relative cursor-pointer" onClick={() => navigate('/')}>
             {brandLogoBase64 ? (
-              <img 
-                src={brandLogoBase64} 
-                alt="Brand Logo" 
-                className="h-10 w-auto object-contain" 
-              />
+              <img src={brandLogoBase64} alt="Brand Logo" className="h-9 w-auto object-contain" />
             ) : (
-              <div className="h-10 px-3 bg-zinc-900 border border-apex-gold rounded flex items-center justify-center">
-                <span className="text-apex-gold font-bold tracking-widest">APEX</span>
+              <div className="h-9 px-3 bg-[#0f1011] border border-white/10 rounded-lg flex items-center justify-center">
+                <span className="text-[#7170ff] font-semibold tracking-widest text-sm">APEX</span>
               </div>
             )}
           </div>
 
-          <h1 className="text-white font-bold tracking-widest uppercase hidden md:block pl-2">
+          <h1 className="text-[#f7f8f8] font-semibold tracking-widest uppercase hidden md:block pl-1 text-sm">
             {APP_NAME}
           </h1>
         </div>
 
-        {/* Right: Language, Profile & Logout */}
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Notification Bell */}
+        {/* Right: Language, Notifications, Profile & Logout */}
+        <div className="flex items-center space-x-1 sm:space-x-2">
           {user?.role === 'admin' && (
             <button
               onClick={() => navigate('/')}
-              className="relative p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
+              className="relative p-2 text-[#8a8f98] hover:text-white hover:bg-white/5 rounded-lg transition-colors"
               title="Notificaties"
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="w-[18px] h-[18px]" />
               {notificationCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 leading-none">
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1 leading-none">
                   {notificationCount > 99 ? '99+' : notificationCount}
                 </span>
               )}
             </button>
           )}
+
           <button
             onClick={toggleLanguage}
-            className="flex items-center space-x-1 text-zinc-400 hover:text-apex-gold transition-colors border border-zinc-700 rounded px-2 py-1"
+            className="flex items-center space-x-1 text-[#8a8f98] hover:text-white transition-colors border border-white/[0.07] hover:border-white/20 rounded-lg px-2.5 py-1.5"
             title="Taal wisselen"
           >
-            <Globe className="w-4 h-4" />
-            <span className="uppercase font-bold text-xs hidden sm:inline">{language.toUpperCase()}</span>
+            <Globe className="w-3.5 h-3.5" />
+            <span className="uppercase font-medium text-[11px] hidden sm:inline">{language.toUpperCase()}</span>
           </button>
-          
-          <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center text-apex-gold border border-apex-gold font-bold text-xs shadow-sm shadow-apex-gold/20 cursor-default" title={user?.username}>
+
+          <div
+            className="w-8 h-8 bg-[#5e6ad2]/15 border border-[#5e6ad2]/40 rounded-full flex items-center justify-center text-[#7170ff] font-semibold text-xs cursor-default"
+            title={user?.username}
+          >
             {user ? getInitials(user.username) : '?'}
           </div>
 
-          <button 
+          <button
             onClick={handleLogout}
-            className="p-2 text-zinc-400 hover:text-red-500 hover:bg-zinc-800 rounded transition-colors"
+            className="p-2 text-[#8a8f98] hover:text-red-400 hover:bg-white/5 rounded-lg transition-colors"
             title="Uitloggen"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-[18px] h-[18px]" />
           </button>
         </div>
       </header>

@@ -15,8 +15,8 @@
                 apex: {
                   black: 'var(--apex-black)',
                   dark: 'var(--apex-surface)',
-                  gold: '#d4af37',
-                  goldlight: '#f3e5ab',
+                  gold: '#5e6ad2',
+                  goldlight: '#7170ff',
                   muted: 'var(--apex-muted)'
                 }
               }
@@ -28,80 +28,101 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       :root {
-        --apex-black: #121212;
-        --apex-surface: #1e1e1e;
-        --apex-muted: #a1a1aa;
-        --bg-zinc-950: #09090b;
-        --bg-zinc-900: #18181b;
-        --border-zinc-800: #27272a;
-        --text-zinc-400: #a1a1aa;
-        --text-main: #ffffff;
+        --apex-black: #08090a;
+        --apex-surface: #0f1011;
+        --apex-muted: #8a8f98;
+        --bg-zinc-950: #08090a;
+        --bg-zinc-900: #0f1011;
+        --border-zinc-800: rgba(255,255,255,0.08);
+        --text-zinc-400: #8a8f98;
+        --text-main: #f7f8f8;
+        --accent: #5e6ad2;
+        --accent-hover: #7170ff;
       }
       html.light {
-        --apex-black: #ffffff;
-        --apex-surface: #f4f4f5;
-        --apex-muted: #71717a;
-        --bg-zinc-950: #f8fafc;
+        --apex-black: #f5f5f7;
+        --apex-surface: #ffffff;
+        --apex-muted: #6e7380;
+        --bg-zinc-950: #f0f1f3;
         --bg-zinc-900: #ffffff;
-        --border-zinc-800: #e2e8f0;
-        --text-zinc-400: #64748b;
-        --text-main: #18181b;
+        --border-zinc-800: rgba(0,0,0,0.08);
+        --text-zinc-400: #6e7380;
+        --text-main: #111214;
+        --accent: #5e6ad2;
+        --accent-hover: #7170ff;
       }
-      /* Override Tailwind Zinc colors to follow variables for instant theme flip */
+
+      /* Override Tailwind Zinc colors */
       .bg-zinc-950 { background-color: var(--bg-zinc-950) !important; }
       .bg-zinc-900 { background-color: var(--bg-zinc-900) !important; }
       .border-zinc-800 { border-color: var(--border-zinc-800) !important; }
       .text-zinc-400 { color: var(--text-zinc-400) !important; }
-      
-      body { 
-        background-color: var(--bg-zinc-950); 
-        color: var(--text-main); 
+
+      body {
+        background-color: var(--bg-zinc-950);
+        color: var(--text-main);
         transition: background-color 0.3s ease;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
+        margin: 0; padding: 0; min-height: 100vh;
       }
-      #root {
-        min-height: 100vh;
-      }
-      
-      /* Apex Gold — hardcoded fallback zodat knoppen altijd zichtbaar zijn */
-      .bg-apex-gold { background-color: #d4af37 !important; }
-      .text-apex-gold { color: #d4af37 !important; }
-      .border-apex-gold { border-color: #d4af37 !important; }
-      .hover\:bg-yellow-500:hover { background-color: #eab308 !important; }
-      .text-apex-gold\/70 { color: rgba(212,175,55,0.7) !important; }
-      .bg-apex-gold\/10 { background-color: rgba(212,175,55,0.1) !important; }
-      .bg-apex-gold\/20 { background-color: rgba(212,175,55,0.2) !important; }
-      .border-apex-gold\/20 { border-color: rgba(212,175,55,0.2) !important; }
-      .border-apex-gold\/30 { border-color: rgba(212,175,55,0.3) !important; }
-      .border-apex-gold\/50 { border-color: rgba(212,175,55,0.5) !important; }
-      .hover\:border-apex-gold\/50:hover { border-color: rgba(212,175,55,0.5) !important; }
-      .shadow-apex-gold\/20 { box-shadow: 0 4px 16px rgba(212,175,55,0.2); }
-      .focus\:border-apex-gold:focus { border-color: #d4af37 !important; }
-      .focus\:ring-apex-gold\/50:focus { --tw-ring-color: rgba(212,175,55,0.5); }
-      .group-hover\:text-apex-gold { color: #d4af37; }
-      .hover\:text-apex-gold:hover { color: #d4af37 !important; }
-      .hover\:bg-apex-gold:hover { background-color: #d4af37 !important; }
-      .text-apex-gold { color: #d4af37 !important; }
-
-      /* Smooth Transitions */
-      * { transition: background-color 0.2s ease, border-color 0.2s ease; }
-
-      /* Error Overlay Styling */
-      #fatal-error-overlay {
+      /* Subtle grid pattern across entire app */
+      body::before {
+        content: '';
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        color: #ff4444;
-        z-index: 99999;
-        padding: 40px;
-        font-family: 'JetBrains Mono', monospace;
-        display: none;
-        overflow: auto;
+        inset: 0;
+        opacity: 0.028;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+        background-size: 36px 36px;
+        pointer-events: none;
+        z-index: 0;
+      }
+      /* Radial gradient ambient glow */
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at 70% 0%, rgba(113,112,255,0.09) 0%, transparent 38%),
+          radial-gradient(circle at 10% 90%, rgba(94,106,210,0.07) 0%, transparent 32%);
+        pointer-events: none;
+        z-index: 0;
+      }
+      #root { min-height: 100vh; position: relative; z-index: 1; }
+
+      /* Accent color — indigo (replaces gold throughout) */
+      .bg-apex-gold { background-color: var(--accent) !important; }
+      .text-apex-gold { color: var(--accent) !important; }
+      .border-apex-gold { border-color: var(--accent) !important; }
+      .hover\:bg-yellow-500:hover { background-color: var(--accent-hover) !important; }
+      .hover\:bg-apex-gold:hover { background-color: var(--accent) !important; }
+      .hover\:text-apex-gold:hover { color: var(--accent) !important; }
+      .group-hover\:text-apex-gold { color: var(--accent); }
+      .focus\:border-apex-gold:focus { border-color: var(--accent) !important; }
+      .focus\:ring-apex-gold\/50:focus { --tw-ring-color: rgba(94,106,210,0.4); }
+      .text-apex-gold\/70 { color: rgba(94,106,210,0.7) !important; }
+      .bg-apex-gold\/10 { background-color: rgba(94,106,210,0.1) !important; }
+      .bg-apex-gold\/20 { background-color: rgba(94,106,210,0.18) !important; }
+      .border-apex-gold\/20 { border-color: rgba(94,106,210,0.2) !important; }
+      .border-apex-gold\/30 { border-color: rgba(94,106,210,0.3) !important; }
+      .border-apex-gold\/50 { border-color: rgba(94,106,210,0.5) !important; }
+      .hover\:border-apex-gold\/50:hover { border-color: rgba(94,106,210,0.5) !important; }
+      .shadow-apex-gold\/10 { box-shadow: 0 2px 12px rgba(94,106,210,0.15) !important; }
+      .shadow-apex-gold\/20 { box-shadow: 0 4px 20px rgba(94,106,210,0.22) !important; }
+
+      /* Yellow remnants → indigo */
+      .bg-yellow-600, .hover\:bg-yellow-600:hover { background-color: var(--accent) !important; }
+      .border-yellow-600, .hover\:border-yellow-600:hover { border-color: var(--accent) !important; }
+      .text-yellow-500, .text-yellow-400 { color: var(--accent-hover) !important; }
+
+      /* Smooth transitions */
+      * { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease; }
+
+      /* Error overlay */
+      #fatal-error-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; color: #ff4444; z-index: 99999;
+        padding: 40px; font-family: monospace; display: none; overflow: auto;
       }
     </style>
     <script type="importmap">
