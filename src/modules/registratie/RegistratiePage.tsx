@@ -4,6 +4,7 @@ import { Shield, Building2, ArrowLeft, CheckCircle2, ChevronRight, AlertCircle }
 import { useStore } from '../../data/store';
 import { RegistrationType } from '../../data/types';
 
+
 type Step = 'keuze' | 'formulier' | 'bevestigd';
 
 const TALEN = ['NL', 'FR', 'EN', 'DE'];
@@ -14,7 +15,7 @@ const inputClass =
 const labelClass = 'block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2';
 
 export const RegistratiePage: React.FC = () => {
-  const { addPendingRegistration, pricingConfig } = useStore();
+  const { addPendingRegistration, pricingConfig, brandLogoBase64 } = useStore();
 
   const [step, setStep] = useState<Step>('keuze');
   const [type, setType] = useState<RegistrationType>('agent');
@@ -158,10 +159,13 @@ export const RegistratiePage: React.FC = () => {
       <div className="relative z-10 w-full max-w-md">
         {/* Header */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-16 h-16 rounded-2xl border border-white/10 bg-[#0f1011] flex items-center justify-center shadow-[0_0_40px_rgba(113,112,255,0.15)] mb-4">
-            <span className="text-3xl font-semibold text-[#f7f8f8]">A</span>
-          </div>
-          <h1 className="text-xl font-bold text-white">Apex Vigilance Group</h1>
+          {brandLogoBase64 ? (
+            <img src={brandLogoBase64} alt="Logo" className="h-32 object-contain opacity-95 mb-2" />
+          ) : (
+            <div className="w-24 h-24 rounded-3xl border border-white/10 bg-[#0f1011] flex items-center justify-center shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_0_40px_rgba(113,112,255,0.15)] mb-2">
+              <span className="text-5xl font-semibold text-[#f7f8f8]">A</span>
+            </div>
+          )}
           <p className="text-sm text-[#8a8f98] mt-1">Profiel aanmaken</p>
         </div>
 
@@ -181,7 +185,6 @@ export const RegistratiePage: React.FC = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-white">Bewakingsagent</div>
-                  <div className="text-xs text-[#8a8f98] mt-0.5">Ik wil werken bij Apex Vigilance</div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
               </button>
@@ -195,7 +198,6 @@ export const RegistratiePage: React.FC = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-white">Klant / Bedrijf</div>
-                  <div className="text-xs text-[#8a8f98] mt-0.5">Ik wil beveiliging aanvragen</div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
               </button>
