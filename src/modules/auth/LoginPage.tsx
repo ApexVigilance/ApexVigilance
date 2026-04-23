@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from './store';
 import { useStore } from '../../data/store';
-import { Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, LogIn, AlertCircle, UserPlus } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { login, loginError, clearError, isAuthenticated, user } = useAuthStore();
@@ -124,6 +124,17 @@ export const LoginPage: React.FC = () => {
               {loading ? 'Bezig...' : 'Inloggen'}
             </button>
           </form>
+
+          <div className="mt-5 pt-5 border-t border-white/[0.06]">
+            <p className="text-xs text-[#8a8f98] text-center mb-3">Nog geen profiel?</p>
+            <Link
+              to="/registreer"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 text-[#f7f8f8] text-sm font-medium hover:bg-white/[0.05] hover:border-white/20 transition-all"
+            >
+              <UserPlus className="w-4 h-4 text-[#7170ff]" />
+              Registreer als agent of klant
+            </Link>
+          </div>
         </div>
 
         <div className="mt-6 text-center text-[#62666d] text-xs">

@@ -288,6 +288,32 @@ export interface InvoiceLine {
 
 export type InvoiceStatus = 'Concept' | 'Sent' | 'Paid';
 
+export type RegistrationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type RegistrationType = 'agent' | 'client';
+
+export interface PendingRegistration {
+  id: string;
+  type: RegistrationType;
+  status: RegistrationStatus;
+  submittedAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  rejectionReason?: string;
+  email: string;
+  phone: string;
+  address?: string;
+  // Agent-specifiek
+  firstName?: string;
+  lastName?: string;
+  languages?: string[];
+  motivation?: string;
+  // Klant-specifiek
+  companyName?: string;
+  contactPerson?: string;
+  vat?: string;
+  message?: string;
+}
+
 export interface Invoice {
   id: string;
   number: string;

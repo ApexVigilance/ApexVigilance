@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../modules/auth/store';
+import { useStore } from '../data/store';
 import {
   LayoutDashboard,
   Users,
@@ -13,7 +14,8 @@ import {
   AlertTriangle,
   MapPin,
   FileCheck,
-  Settings
+  Settings,
+  UserPlus
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -25,6 +27,8 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const { pendingRegistrations } = useStore();
+  const pendingRegCount = pendingRegistrations.filter(r => r.status === 'PENDING').length;
 
   const navItems = [
     { path: '/', label: 'nav.dashboard', icon: LayoutDashboard },
@@ -37,6 +41,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { path: '/klanten', label: 'nav.klanten', icon: MapPin },
     { path: '/facturatie', label: 'nav.facturatie', icon: FileCheck },
   ];
+
+  const registratiesItem = { path: '/registraties', label: 'Registraties', icon: UserPlus };
 
   return (
     <>
@@ -75,6 +81,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </NavLink>
             );
           })}
+
+          <NavLink
+            to={registratiesItem.path}
+            onClick={onClose}
+            className={({ isActive }) => clsx(
+              "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-150 group",
+              isActive
+                ? "bg-[#5e6ad2]/12 text-[#7170ff] border border-[#5e6ad2]/25"
+                : "text-[#8a8f98] hover:text-[#f7f8f8] hover:bg-white/[0.05] border border-transparent"
+            )}
+          >
+            <UserPlus className="w-[18px] h-[18px] shrink-0" />
+            <span className="font-medium text-sm flex-1">{registratiesItem.label}</span>
+            {pendingRegCount > 0 && (
+              <span className="text-[10px] font-bold bg-emerald-500 text-white px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                {pendingRegCount}
+              </span>
+            )}
+          </NavLink>
         </nav>
 
         {/* Settings Link (admin only) */}
