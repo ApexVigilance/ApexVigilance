@@ -33,6 +33,10 @@ import { InvoiceDetailPage } from '../modules/facturatie/InvoiceDetailPage';
 import { ExportPage } from '../modules/facturatie/ExportPage';
 import { SettingsPage } from '../modules/settings/SettingsPage';
 
+// Registration
+import { RegistratiePage } from '../modules/registratie/RegistratiePage';
+import { RegistratiesPage } from '../modules/registraties/RegistratiesPage';
+
 // Auth Modules
 import { LoginPage } from '../modules/auth/LoginPage';
 import { RoleGuard } from '../modules/auth/RoleGuard';
@@ -58,6 +62,10 @@ export const router = createHashRouter([
   {
     path: '/login',
     element: <LoginPage />
+  },
+  {
+    path: '/registreer',
+    element: <RegistratiePage />
   },
   {
     path: '/',
@@ -91,6 +99,7 @@ export const router = createHashRouter([
       { path: 'facturatie/factuur/:invoiceId', element: <InvoiceDetailPage /> },
       { path: 'facturatie/export', element: <ExportPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'registraties', element: <RegistratiesPage /> },
     ]
   },
   {

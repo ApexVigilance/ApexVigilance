@@ -1,10 +1,10 @@
 
 import { create } from 'zustand';
-import { 
+import {
   Employee, Shift, Incident, Client, Report, PricingConfig, Invoice, InvoiceLine, TimeLog,
   InvoiceOverride, FullReport, FullIncident, FullClient, ClientLocation, IncidentComment, SystemUpdate,
   AuditEntry, ReviewStatus, ShiftApplication, TimeEvent, OnboardingStatus, SmtpConfig, ApplicationStatus, InvoiceStatus,
-  ShiftRequest
+  ShiftRequest, PendingRegistration
 } from './types';
 import { SEED_EMPLOYEES, SEED_SHIFTS, SEED_INCIDENTS, SEED_CLIENTS, SEED_REPORTS, SEED_TIME_LOGS } from './seed';
 import { createInvoice } from '../services/invoiceFactory';
@@ -21,7 +21,8 @@ const KEYS = {
   APPLICATIONS: 'apex_applications_v2',
   SHIFTS: 'apex_shifts_v2',
   TIMELOGS: 'apex_timelogs_v2',
-  THEME: 'apex_theme_v2'
+  THEME: 'apex_theme_v2',
+  REGISTRATIONS: 'apex_pending_registrations'
 };
 
 const loadFromStorage = <T>(key: string, seed: T): T => {
@@ -145,6 +146,9 @@ interface AppState {
   billingUpdateInvoice: (id: string, lines: InvoiceLine[], note?: string) => void;
   createInvoiceForClient: (clientId: string, shiftIds: string[]) => void;
   createManualInvoice: (clientId: string, periodStart: string, periodEnd: string, lines: InvoiceLine[]) => void;
+  pendingRegistrations: PendingRegistration[];
+  addPendingRegistration: (data: Omit<PendingRegistration, 'id' | 'status' | 'submittedAt'>) => void;
+  reviewPendingRegistration: (id: string, action: 'APPROVE' | 'REJECT', reason?: string) => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -163,6 +167,7 @@ export const useStore = create<AppState>((set, get) => ({
   billingOverrides: loadFromStorage(KEYS.OVERRIDES, []),
   pricingConfig: loadFromStorage(KEYS.PRICING, defaultPricing),
   shiftRequests: loadFromStorage('apex_shift_requests', []),
+  pendingRegistrations: loadFromStorage(KEYS.REGISTRATIONS, []),
   brandLogoBase64: localStorage.getItem(KEYS.LOGO),
   invoiceTemplateBase64: localStorage.getItem(KEYS.TEMPLATE),
   setLanguage: (lang) => set({ language: lang }),
@@ -551,6 +556,79 @@ export const useStore = create<AppState>((set, get) => ({
       localStorage.setItem('apex_clients', JSON.stringify(n));
       return { clients: n };
   }),
+  addPendingRegistration: (data) => set(s => {
+      const reg: PendingRegistration = {
+          ...data,
+          id: `REG-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+          status: 'PENDING',
+          submittedAt: new Date().toISOString(),
+      };
+      const n = [...s.pendingRegistrations, reg];
+      localStorage.setItem(KEYS.REGISTRATIONS, JSON.stringify(n));
+      return { pendingRegistrations: n };
+  }),
+  reviewPendingRegistration: (id, action, reason) => {
+      const state = get();
+      const reg = state.pendingRegistrations.find(r => r.id === id);
+      if (!reg) return;
+
+      const now = new Date().toISOString();
+
+      if (action === 'APPROVE') {
+          if (reg.type === 'agent') {
+              const newEmployee: Employee = {
+                  id: `EMP-${Date.now()}`,
+                  name: `${reg.firstName || ''} ${reg.lastName || ''}`.trim() || 'Nieuwe Agent',
+                  firstName: reg.firstName,
+                  lastName: reg.lastName,
+                  role: 'Guard',
+                  status: 'Active',
+                  email: reg.email,
+                  phone: reg.phone,
+                  address: reg.address,
+                  languages: reg.languages,
+                  personalInfoStatus: 'MISSING',
+                  idCardStatus: 'MISSING',
+                  badgeDataStatus: 'MISSING',
+                  auditLog: [{ date: now, action: 'Account aangemaakt via registratie', user: 'Admin' }],
+              };
+              set(s => {
+                  const emps = [...s.employees, newEmployee];
+                  localStorage.setItem('apex_employees', JSON.stringify(emps));
+                  return { employees: emps };
+              });
+          } else {
+              const clientRef = state.getNextClientRef();
+              const newClient: FullClient = {
+                  id: `CLI-${Date.now()}`,
+                  clientRef,
+                  name: reg.companyName || 'Nieuw Bedrijf',
+                  contact: reg.contactPerson || '',
+                  status: 'Active',
+                  locations: 0,
+                  email: reg.email,
+                  phone: reg.phone,
+                  address: reg.address,
+                  vat: reg.vat,
+              } as FullClient;
+              set(s => {
+                  const cls = [...s.clients, newClient];
+                  localStorage.setItem('apex_clients', JSON.stringify(cls));
+                  return { clients: cls };
+              });
+          }
+      }
+
+      set(s => {
+          const n = s.pendingRegistrations.map(r =>
+              r.id === id
+                  ? { ...r, status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED' as PendingRegistration['status'], reviewedAt: now, reviewedBy: 'Admin', rejectionReason: reason }
+                  : r
+          );
+          localStorage.setItem(KEYS.REGISTRATIONS, JSON.stringify(n));
+          return { pendingRegistrations: n };
+      });
+  },
   toggleClientActive: (id) => set(s => {
       const n = s.clients.map(c => c.id === id ? { ...c, status: (c.status === 'Active' ? 'Inactive' : 'Active') as 'Active' | 'Inactive' } : c);
       localStorage.setItem('apex_clients', JSON.stringify(n));
