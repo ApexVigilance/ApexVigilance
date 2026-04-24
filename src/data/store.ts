@@ -596,12 +596,14 @@ export const useStore = create<AppState>((set, get) => ({
 
       if (action === 'APPROVE') {
           if (reg.type === 'agent') {
+              const validRoles = ['Guard', 'Senior', 'Supervisor', 'PlanningMaster', 'Coordinator', 'Admin'];
+              const empRole = (validRoles.includes(reg.employeeRole || '') ? reg.employeeRole : 'Guard') as Employee['role'];
               const newEmployee: Employee = {
                   id: `EMP-${Date.now()}`,
                   name: `${reg.firstName || ''} ${reg.lastName || ''}`.trim() || 'Nieuwe Agent',
                   firstName: reg.firstName,
                   lastName: reg.lastName,
-                  role: 'Guard',
+                  role: empRole,
                   status: 'Active',
                   email: reg.email,
                   phone: reg.phone,

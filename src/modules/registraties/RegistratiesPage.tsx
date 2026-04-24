@@ -18,8 +18,16 @@ const StatusBadge: React.FC<{ status: RegistrationStatus }> = ({ status }) => {
   return <span className="inline-flex items-center gap-1 text-xs font-medium bg-red-500/15 text-red-400 px-2 py-0.5 rounded-full"><XCircle className="w-3 h-3" /> Afgewezen</span>;
 };
 
-const TypeBadge: React.FC<{ type: PendingRegistration['type'] }> = ({ type }) => {
-  if (type === 'agent') return <span className="inline-flex items-center gap-1 text-xs font-medium bg-[#5e6ad2]/15 text-[#7170ff] px-2 py-0.5 rounded-full"><Shield className="w-3 h-3" /> Agent</span>;
+const ROLE_LABELS: Record<string, string> = {
+  'Guard': 'Bewaker', 'Senior': 'Senior Bewaker', 'Supervisor': 'Verantwoordelijke',
+  'PlanningMaster': 'Planningmeester', 'Coordinator': 'Coördinator', 'Admin': 'Administratie',
+};
+
+const TypeBadge: React.FC<{ type: PendingRegistration['type']; employeeRole?: string }> = ({ type, employeeRole }) => {
+  if (type === 'agent') {
+    const label = employeeRole ? (ROLE_LABELS[employeeRole] || employeeRole) : 'Medewerker';
+    return <span className="inline-flex items-center gap-1 text-xs font-medium bg-[#5e6ad2]/15 text-[#7170ff] px-2 py-0.5 rounded-full"><Shield className="w-3 h-3" /> {label}</span>;
+  }
   return <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full"><Building2 className="w-3 h-3" /> Klant</span>;
 };
 
@@ -100,7 +108,7 @@ export const RegistratiesPage: React.FC = () => {
           <div className="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-5 border-b border-zinc-800">
               <div className="flex items-center gap-2">
-                <TypeBadge type={selected.type} />
+                <TypeBadge type={selected.type} employeeRole={selected.employeeRole} />
                 <StatusBadge status={selected.status} />
               </div>
               <button onClick={() => setSelected(null)} className="text-zinc-500 hover:text-white transition-colors"><X className="w-4 h-4" /></button>
@@ -109,6 +117,16 @@ export const RegistratiesPage: React.FC = () => {
               {selected.type === 'agent' ? (
                 <>
                   <DetailRow label="Naam" value={`${selected.firstName || ''} ${selected.lastName || ''}`.trim()} />
+                  {selected.employeeRole && (
+                    <DetailRow label="Aangevraagde rol" value={{
+                      'Guard': 'Bewakingsagent',
+                      'Senior': 'Senior Bewaker',
+                      'Supervisor': 'Verantwoordelijke',
+                      'PlanningMaster': 'Planningmeester',
+                      'Coordinator': 'Coördinator',
+                      'Admin': 'Administratie',
+                    }[selected.employeeRole] || selected.employeeRole} />
+                  )}
                   <DetailRow label="E-mail" value={selected.email} />
                   <DetailRow label="Telefoon" value={selected.phone} />
                   {selected.address && <DetailRow label="Adres" value={selected.address} />}
@@ -209,7 +227,7 @@ export const RegistratiesPage: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-semibold text-white">{getName(reg)}</span>
-                  <TypeBadge type={reg.type} />
+                  <TypeBadge type={reg.type} employeeRole={reg.employeeRole} />
                 </div>
                 <div className="text-xs text-zinc-500 mt-0.5">{reg.email} · {reg.phone}</div>
                 <div className="text-xs text-zinc-600 mt-0.5">

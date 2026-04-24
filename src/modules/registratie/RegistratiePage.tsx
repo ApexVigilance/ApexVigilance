@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Building2, ArrowLeft, CheckCircle2, ChevronRight, AlertCircle } from 'lucide-react';
+import { Shield, Building2, ArrowLeft, CheckCircle2, ChevronRight, AlertCircle, Star, Calendar, Users } from 'lucide-react';
 import { useStore } from '../../data/store';
-import { RegistrationType } from '../../data/types';
 
 type Step = 'keuze' | 'formulier' | 'bevestigd';
 
@@ -13,11 +12,64 @@ const inputClass =
 
 const labelClass = 'block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2';
 
+type RoleOption = {
+  role: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  hoverColor: string;
+};
+
+const ROLE_OPTIONS: RoleOption[] = [
+  {
+    role: 'Guard',
+    label: 'Bewakingsagent',
+    description: 'Bewaking op locatie, statisch of mobiel',
+    icon: <Shield className="w-5 h-5 text-zinc-300" />,
+    color: 'bg-zinc-500/15',
+    hoverColor: 'hover:border-zinc-500/40 hover:bg-zinc-500/10',
+  },
+  {
+    role: 'Senior',
+    label: 'Senior Bewaker',
+    description: 'Ervaren bewaker met extra verantwoordelijkheden',
+    icon: <Shield className="w-5 h-5 text-blue-400" />,
+    color: 'bg-blue-500/15',
+    hoverColor: 'hover:border-blue-500/40 hover:bg-blue-500/10',
+  },
+  {
+    role: 'Supervisor',
+    label: 'Verantwoordelijke',
+    description: 'Toezichthouder op ploegen en operaties',
+    icon: <Star className="w-5 h-5 text-orange-400" />,
+    color: 'bg-orange-500/15',
+    hoverColor: 'hover:border-orange-500/40 hover:bg-orange-500/10',
+  },
+  {
+    role: 'PlanningMaster',
+    label: 'Planningmeester',
+    description: 'Beheer van roosters en inzet van personeel',
+    icon: <Calendar className="w-5 h-5 text-purple-400" />,
+    color: 'bg-purple-500/15',
+    hoverColor: 'hover:border-purple-500/40 hover:bg-purple-500/10',
+  },
+  {
+    role: 'Coordinator',
+    label: 'Coördinator',
+    description: 'Coördinatie van operaties en communicatie',
+    icon: <Users className="w-5 h-5 text-cyan-400" />,
+    color: 'bg-cyan-500/15',
+    hoverColor: 'hover:border-cyan-500/40 hover:bg-cyan-500/10',
+  },
+];
+
 export const RegistratiePage: React.FC = () => {
   const { addPendingRegistration, brandLogoBase64 } = useStore();
 
   const [step, setStep] = useState<Step>('keuze');
-  const [type, setType] = useState<RegistrationType>('agent');
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -39,8 +91,16 @@ export const RegistratiePage: React.FC = () => {
     vat: '',
   });
 
-  const chooseType = (t: RegistrationType) => {
-    setType(t);
+  const chooseRole = (role: string) => {
+    setSelectedRole(role);
+    setIsClient(false);
+    setStep('formulier');
+    setError('');
+  };
+
+  const chooseClient = () => {
+    setSelectedRole(null);
+    setIsClient(true);
     setStep('formulier');
     setError('');
   };
@@ -84,13 +144,13 @@ export const RegistratiePage: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (type === 'agent' && !validateAgent()) return;
-    if (type === 'client' && !validateClient()) return;
+    if (!isClient && !validateAgent()) return;
+    if (isClient && !validateClient()) return;
 
     setLoading(true);
     await new Promise(r => setTimeout(r, 500));
 
-    if (type === 'agent') {
+    if (!isClient) {
       addPendingRegistration({
         type: 'agent',
         email: agentForm.email,
@@ -99,6 +159,7 @@ export const RegistratiePage: React.FC = () => {
         firstName: agentForm.firstName,
         lastName: agentForm.lastName,
         languages: agentForm.languages.length > 0 ? agentForm.languages : undefined,
+        employeeRole: selectedRole || 'Guard',
       });
     } else {
       addPendingRegistration({
@@ -115,6 +176,8 @@ export const RegistratiePage: React.FC = () => {
     setLoading(false);
     setStep('bevestigd');
   };
+
+  const selectedRoleOption = ROLE_OPTIONS.find(r => r.role === selectedRole);
 
   return (
     <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex items-center justify-center p-4 relative overflow-hidden">
@@ -138,34 +201,43 @@ export const RegistratiePage: React.FC = () => {
         {step === 'keuze' && (
           <div className="space-y-4">
             <div className="rounded-2xl border border-white/8 bg-[#0f1011]/96 backdrop-blur-xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)]">
-              <h2 className="text-base font-semibold text-white mb-1">Wie bent u?</h2>
-              <p className="text-sm text-[#8a8f98] mb-5">Kies hieronder uw type registratie.</p>
+              <h2 className="text-base font-semibold text-white mb-1">Welke functie vraagt u aan?</h2>
+              <p className="text-sm text-[#8a8f98] mb-5">Kies uw gewenste rol. De admin keurt uw aanvraag goed.</p>
 
-              <button
-                onClick={() => chooseType('agent')}
-                className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-white/[0.03] hover:bg-[#5e6ad2]/10 hover:border-[#5e6ad2]/40 transition-all text-left mb-3"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#5e6ad2]/15 flex items-center justify-center shrink-0">
-                  <Shield className="w-5 h-5 text-[#7170ff]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-white">Bewakingsagent</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
-              </button>
+              <div className="space-y-2 mb-3">
+                {ROLE_OPTIONS.map(opt => (
+                  <button
+                    key={opt.role}
+                    onClick={() => chooseRole(opt.role)}
+                    className={`w-full flex items-center gap-4 p-3.5 rounded-xl border border-white/8 bg-white/[0.03] ${opt.hoverColor} transition-all text-left`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl ${opt.color} flex items-center justify-center shrink-0`}>
+                      {opt.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-white">{opt.label}</div>
+                      <div className="text-xs text-[#8a8f98] mt-0.5">{opt.description}</div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
+                  </button>
+                ))}
+              </div>
 
-              <button
-                onClick={() => chooseType('client')}
-                className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-white/[0.03] hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all text-left"
-              >
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
-                  <Building2 className="w-5 h-5 text-emerald-400" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-white">Klant / Bedrijf</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
-              </button>
+              <div className="border-t border-white/[0.06] pt-3">
+                <button
+                  onClick={chooseClient}
+                  className="w-full flex items-center gap-4 p-3.5 rounded-xl border border-white/8 bg-white/[0.03] hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all text-left"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
+                    <Building2 className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-white">Klant / Bedrijf</div>
+                    <div className="text-xs text-[#8a8f98] mt-0.5">Beveiliging aanvragen voor uw organisatie</div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-[#8a8f98] shrink-0" />
+                </button>
+              </div>
             </div>
 
             <div className="text-center">
@@ -181,12 +253,12 @@ export const RegistratiePage: React.FC = () => {
           <div>
             <div className="rounded-2xl border border-white/8 bg-[#0f1011]/96 backdrop-blur-xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)]">
               <div className="flex items-center gap-3 mb-5">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${type === 'agent' ? 'bg-[#5e6ad2]/15' : 'bg-emerald-500/15'}`}>
-                  {type === 'agent' ? <Shield className="w-4 h-4 text-[#7170ff]" /> : <Building2 className="w-4 h-4 text-emerald-400" />}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isClient ? 'bg-emerald-500/15' : selectedRoleOption ? selectedRoleOption.color : 'bg-[#5e6ad2]/15'}`}>
+                  {isClient ? <Building2 className="w-4 h-4 text-emerald-400" /> : (selectedRoleOption?.icon ?? <Shield className="w-4 h-4 text-[#7170ff]" />)}
                 </div>
                 <div>
                   <h2 className="text-base font-semibold text-white leading-tight">
-                    {type === 'agent' ? 'Registreer als agent' : 'Registreer als klant'}
+                    {isClient ? 'Registreer als klant' : `Registreer als ${selectedRoleOption?.label || 'medewerker'}`}
                   </h2>
                   <p className="text-xs text-[#8a8f98]">Velden met * zijn verplicht</p>
                 </div>
@@ -200,7 +272,7 @@ export const RegistratiePage: React.FC = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                {type === 'agent' ? (
+                {!isClient ? (
                   <>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
@@ -278,9 +350,7 @@ export const RegistratiePage: React.FC = () => {
                   disabled={loading}
                   className="w-full bg-[#5e6ad2] hover:bg-[#7170ff] disabled:opacity-40 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(94,106,210,0.22)]"
                 >
-                  {loading ? (
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : null}
+                  {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : null}
                   {loading ? 'Bezig...' : 'Aanvraag indienen'}
                 </button>
               </form>

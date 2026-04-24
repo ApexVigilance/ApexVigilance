@@ -309,6 +309,7 @@ export interface PendingRegistration {
   lastName?: string;
   languages?: string[];
   motivation?: string;
+  employeeRole?: string; // Guard | Senior | Supervisor | PlanningMaster | Coordinator
   // Klant-specifiek
   companyName?: string;
   contactPerson?: string;
