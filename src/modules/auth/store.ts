@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type UserRole = 'admin' | 'agent' | 'client';
+export type UserRole = 'admin' | 'staff' | 'agent' | 'client';
 
 export interface User {
   id: string;
@@ -81,7 +81,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         e.portalPassword === p
       );
       if (emp) {
-        const user: User = { id: emp.id, username: emp.name, role: 'agent', employeeId: emp.id };
+        const staffRoles = ['Supervisor', 'PlanningMaster', 'Coordinator', 'Admin'];
+        const portalRole: UserRole = staffRoles.includes(emp.role) ? 'staff' : 'agent';
+        const user: User = { id: emp.id, username: emp.name, role: portalRole, employeeId: emp.id };
         setSession(user);
         set({ user, isAuthenticated: true, loginError: null });
         return true;

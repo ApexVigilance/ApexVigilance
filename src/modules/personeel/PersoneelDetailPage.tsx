@@ -4,6 +4,24 @@ import { useTranslation } from 'react-i18next';
 import { BackButton } from '../../ui/BackButton';
 import { useStore, OnboardingStatus } from '../../data/store';
 import { Employee } from '../../data/types';
+
+const ROLE_LABELS: Record<string, string> = {
+  'Guard': 'Bewaker',
+  'Senior': 'Senior Bewaker',
+  'Supervisor': 'Verantwoordelijke',
+  'PlanningMaster': 'Planningmeester',
+  'Coordinator': 'Coördinator',
+  'Admin': 'Administratie',
+};
+
+const ROLE_COLORS: Record<string, string> = {
+  'Guard': 'bg-zinc-800 border-zinc-700 text-zinc-300',
+  'Senior': 'bg-blue-900/40 border-blue-600/50 text-blue-300',
+  'Supervisor': 'bg-orange-900/40 border-orange-600/50 text-orange-300',
+  'PlanningMaster': 'bg-purple-900/40 border-purple-600/50 text-purple-300',
+  'Coordinator': 'bg-cyan-900/40 border-cyan-600/50 text-cyan-300',
+  'Admin': 'bg-green-900/40 border-green-600/50 text-green-300',
+};
 import {
   User, Shield, FileText, AlertTriangle,
   ToggleLeft, ToggleRight, CheckCircle, XCircle, Download, Printer,
@@ -30,9 +48,9 @@ const PortalCredentials: React.FC<{ employee: Employee; updateEmployee: (id: str
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
       <h3 className="text-sm font-bold text-zinc-500 uppercase mb-1 flex items-center gap-2">
-        <KeyRound className="w-4 h-4 text-apex-gold" /> App Toegang (Agent Portaal)
+        <KeyRound className="w-4 h-4 text-apex-gold" /> App Toegang (Portaal)
       </h3>
-      <p className="text-xs text-zinc-600 mb-4">Stel de inloggegevens in waarmee deze medewerker kan inloggen in de agent-sectie.</p>
+      <p className="text-xs text-zinc-600 mb-4">Stel de inloggegevens in waarmee deze medewerker kan inloggen. Bewakers/Senioren → agent-portaal. Verantwoordelijken/Planningmeesters/Coördinatoren/Administratie → werknemers-dashboard.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-bold text-zinc-400 uppercase mb-1">Gebruikersnaam</label>
@@ -165,7 +183,7 @@ export const PersoneelDetailPage: React.FC = () => {
               <div>
                  <h1 className="text-3xl font-bold text-white tracking-tight">{employee.name}</h1>
                  <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-400 mt-2">
-                    <span className="uppercase font-bold tracking-wider text-zinc-300 bg-zinc-800 px-2 py-0.5 rounded">{employee.role}</span>
+                    <span className={clsx("uppercase font-bold tracking-wider px-2 py-0.5 rounded border text-xs", ROLE_COLORS[employee.role] || ROLE_COLORS['Guard'])}>{ROLE_LABELS[employee.role] || employee.role}</span>
                     <span className="font-mono text-zinc-500">{employee.id}</span>
                  </div>
               </div>

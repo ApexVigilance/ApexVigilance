@@ -16,7 +16,7 @@ export const LoginPage: React.FC = () => {
 
   React.useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === 'admin') navigate('/', { replace: true });
+      if (user.role === 'admin' || user.role === 'staff') navigate('/', { replace: true });
       else if (user.role === 'agent') navigate('/agent', { replace: true });
       else if (user.role === 'client') navigate('/client', { replace: true });
     }
@@ -32,7 +32,7 @@ export const LoginPage: React.FC = () => {
     setLoading(false);
     if (ok) {
       const u = useAuthStore.getState().user;
-      if (u?.role === 'admin') navigate('/');
+      if (u?.role === 'admin' || u?.role === 'staff') navigate('/');
       else if (u?.role === 'agent') navigate('/agent');
       else if (u?.role === 'client') navigate('/client');
     }

@@ -4,13 +4,25 @@ import { useAuthStore, UserRole } from './store';
 
 interface RoleGuardProps {
   children: React.ReactNode;
-  requiredRole?: UserRole;
+  requiredRole?: UserRole | UserRole[];
 }
+
+const getRoleHome = (role: UserRole): string => {
+  if (role === 'admin' || role === 'staff') return '/';
+  if (role === 'agent') return '/agent';
+  if (role === 'client') return '/client';
+  return '/login';
+};
 
 export const RoleGuard: React.FC<RoleGuardProps> = ({ children, requiredRole }) => {
   const { isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const isAllowed = !requiredRole || (user?.role
+    ? (Array.isArray(requiredRole) ? requiredRole.includes(user.role) : user.role === requiredRole)
+    : false
+  );
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -18,18 +30,12 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({ children, requiredRole }) 
       return;
     }
 
-    if (requiredRole && user?.role !== requiredRole) {
-      if (user?.role === 'admin') {
-        navigate('/', { replace: true });
-      } else if (user?.role === 'agent') {
-        navigate('/agent', { replace: true });
-      } else if (user?.role === 'client') {
-        navigate('/client', { replace: true });
-      }
+    if (!isAllowed && user?.role) {
+      navigate(getRoleHome(user.role), { replace: true });
     }
-  }, [isAuthenticated, user, requiredRole, navigate, location]);
+  }, [isAuthenticated, user, isAllowed, navigate, location]);
 
-  if (!isAuthenticated || (requiredRole && user?.role !== requiredRole)) {
+  if (!isAuthenticated || !isAllowed) {
     return null;
   }
 

@@ -35,7 +35,7 @@ export interface SystemUpdate {
 export interface Employee {
   id: string;
   name: string;
-  role: 'Guard' | 'Senior' | 'Admin';
+  role: 'Guard' | 'Senior' | 'Supervisor' | 'PlanningMaster' | 'Coordinator' | 'Admin';
   status: 'Active' | 'Inactive';
   email?: string;
   phone?: string;
