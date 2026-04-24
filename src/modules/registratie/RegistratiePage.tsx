@@ -4,7 +4,6 @@ import { Shield, Building2, ArrowLeft, CheckCircle2, ChevronRight, AlertCircle }
 import { useStore } from '../../data/store';
 import { RegistrationType } from '../../data/types';
 
-
 type Step = 'keuze' | 'formulier' | 'bevestigd';
 
 const TALEN = ['NL', 'FR', 'EN', 'DE'];
@@ -15,14 +14,13 @@ const inputClass =
 const labelClass = 'block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2';
 
 export const RegistratiePage: React.FC = () => {
-  const { addPendingRegistration, pricingConfig, brandLogoBase64 } = useStore();
+  const { addPendingRegistration, brandLogoBase64 } = useStore();
 
   const [step, setStep] = useState<Step>('keuze');
   const [type, setType] = useState<RegistrationType>('agent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Agent fields
   const [agentForm, setAgentForm] = useState({
     firstName: '',
     lastName: '',
@@ -30,10 +28,8 @@ export const RegistratiePage: React.FC = () => {
     phone: '',
     address: '',
     languages: [] as string[],
-    motivation: '',
   });
 
-  // Client fields
   const [clientForm, setClientForm] = useState({
     companyName: '',
     contactPerson: '',
@@ -41,7 +37,6 @@ export const RegistratiePage: React.FC = () => {
     phone: '',
     address: '',
     vat: '',
-    message: '',
   });
 
   const chooseType = (t: RegistrationType) => {
@@ -85,32 +80,6 @@ export const RegistratiePage: React.FC = () => {
     return true;
   };
 
-  const sendConfirmationEmail = async (to: string, name: string) => {
-    try {
-      const smtp = pricingConfig?.smtp;
-      await fetch('http://localhost:3001/api/email/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: [to],
-          subject: 'Aanvraag ontvangen – Apex Vigilance Group',
-          html: `
-            <div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#08090a;color:#f7f8f8;border-radius:12px;padding:32px">
-              <h2 style="color:#7170ff;margin-top:0">Apex Vigilance Group</h2>
-              <p>Beste ${name},</p>
-              <p>Wij hebben uw aanvraag succesvol ontvangen en zullen deze zo snel mogelijk behandelen.</p>
-              <p>U ontvangt een berichtje zodra uw aanvraag is goedgekeurd en uw account is aangemaakt.</p>
-              <p>Met vriendelijke groeten,<br/><strong>Apex Vigilance Group</strong></p>
-            </div>
-          `,
-          smtp: smtp?.pass ? smtp : undefined,
-        }),
-      });
-    } catch {
-      // email failure is non-blocking
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -130,9 +99,7 @@ export const RegistratiePage: React.FC = () => {
         firstName: agentForm.firstName,
         lastName: agentForm.lastName,
         languages: agentForm.languages.length > 0 ? agentForm.languages : undefined,
-        motivation: agentForm.motivation || undefined,
       });
-      await sendConfirmationEmail(agentForm.email, `${agentForm.firstName} ${agentForm.lastName}`);
     } else {
       addPendingRegistration({
         type: 'client',
@@ -142,9 +109,7 @@ export const RegistratiePage: React.FC = () => {
         companyName: clientForm.companyName,
         contactPerson: clientForm.contactPerson,
         vat: clientForm.vat || undefined,
-        message: clientForm.message || undefined,
       });
-      await sendConfirmationEmail(clientForm.email, clientForm.contactPerson);
     }
 
     setLoading(false);
@@ -278,16 +243,6 @@ export const RegistratiePage: React.FC = () => {
                         ))}
                       </div>
                     </div>
-                    <div>
-                      <label className={labelClass}>Motivatie</label>
-                      <textarea
-                        className={`${inputClass} resize-none`}
-                        rows={3}
-                        value={agentForm.motivation}
-                        onChange={e => setAgentForm(f => ({ ...f, motivation: e.target.value }))}
-                        placeholder="Waarom wilt u bij Apex Vigilance werken?"
-                      />
-                    </div>
                   </>
                 ) : (
                   <>
@@ -314,16 +269,6 @@ export const RegistratiePage: React.FC = () => {
                     <div>
                       <label className={labelClass}>BTW-nummer</label>
                       <input className={inputClass} value={clientForm.vat} onChange={e => setClientForm(f => ({ ...f, vat: e.target.value }))} placeholder="BE 0xxx.xxx.xxx" />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Bericht</label>
-                      <textarea
-                        className={`${inputClass} resize-none`}
-                        rows={3}
-                        value={clientForm.message}
-                        onChange={e => setClientForm(f => ({ ...f, message: e.target.value }))}
-                        placeholder="Bijkomende informatie of vragen..."
-                      />
                     </div>
                   </>
                 )}
@@ -360,7 +305,7 @@ export const RegistratiePage: React.FC = () => {
             </div>
             <h2 className="text-lg font-bold text-white mb-2">Aanvraag ingediend</h2>
             <p className="text-sm text-[#8a8f98] mb-6">
-              Uw aanvraag is succesvol ingediend. U ontvangt een bevestiging per e-mail. Wij nemen zo snel mogelijk contact op.
+              Uw aanvraag is succesvol ingediend. Wij nemen zo snel mogelijk contact op.
             </p>
             <Link
               to="/login"
