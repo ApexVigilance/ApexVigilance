@@ -13,8 +13,25 @@ const inputClass =
 
 const labelClass = 'block text-[11px] font-medium text-[#8a8f98] uppercase tracking-[0.18em] mb-2';
 
+const sendBrevoEmail = async (to: string, name: string, apiKey: string, senderEmail: string) => {
+  try {
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Apex Vigilance Group', email: senderEmail },
+        to: [{ email: to, name }],
+        subject: 'Aanvraag ontvangen – Apex Vigilance Group',
+        htmlContent: `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;background:#0f1011;color:#f7f8f8;border-radius:12px;padding:32px;border:1px solid rgba(255,255,255,0.08)"><h2 style="color:#7170ff;margin-top:0">Apex Vigilance Group</h2><p>Beste ${name},</p><p>Wij hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact op.</p><p>Met vriendelijke groeten,<br/><strong>Apex Vigilance Group</strong></p></div>`,
+      }),
+    });
+  } catch {
+    // non-blocking
+  }
+};
+
 export const RegistratiePage: React.FC = () => {
-  const { addPendingRegistration, brandLogoBase64 } = useStore();
+  const { addPendingRegistration, brandLogoBase64, pricingConfig } = useStore();
 
   const [step, setStep] = useState<Step>('keuze');
   const [type, setType] = useState<RegistrationType>('agent');
@@ -90,6 +107,9 @@ export const RegistratiePage: React.FC = () => {
     setLoading(true);
     await new Promise(r => setTimeout(r, 500));
 
+    const brevoApiKey = pricingConfig?.brevoApiKey || '';
+    const brevoSenderEmail = pricingConfig?.brevoSenderEmail || '';
+
     if (type === 'agent') {
       addPendingRegistration({
         type: 'agent',
@@ -100,6 +120,9 @@ export const RegistratiePage: React.FC = () => {
         lastName: agentForm.lastName,
         languages: agentForm.languages.length > 0 ? agentForm.languages : undefined,
       });
+      if (brevoApiKey && brevoSenderEmail) {
+        await sendBrevoEmail(agentForm.email, `${agentForm.firstName} ${agentForm.lastName}`, brevoApiKey, brevoSenderEmail);
+      }
     } else {
       addPendingRegistration({
         type: 'client',
@@ -110,6 +133,9 @@ export const RegistratiePage: React.FC = () => {
         contactPerson: clientForm.contactPerson,
         vat: clientForm.vat || undefined,
       });
+      if (brevoApiKey && brevoSenderEmail) {
+        await sendBrevoEmail(clientForm.email, clientForm.contactPerson, brevoApiKey, brevoSenderEmail);
+      }
     }
 
     setLoading(false);

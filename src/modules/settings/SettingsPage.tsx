@@ -13,7 +13,7 @@ const getAdminCreds = () => {
 
 export const SettingsPage: React.FC = () => {
   const { user } = useAuthStore();
-  const { pricingConfig, savePricingConfig, saveSmtpConfig, brandLogoBase64, saveBrandLogo, invoiceTemplateBase64, saveInvoiceTemplate } = useStore();
+  const { pricingConfig, savePricingConfig, saveSmtpConfig, saveBrevoConfig, brandLogoBase64, saveBrandLogo, invoiceTemplateBase64, saveInvoiceTemplate } = useStore();
 
   const [matrix, setMatrix] = useState(pricingConfig.matrix);
   const [factors, setFactors] = useState({
@@ -23,6 +23,8 @@ export const SettingsPage: React.FC = () => {
     lastMinute: pricingConfig.lastMinuteFactor
   });
   const [smtp, setSmtp] = useState(pricingConfig.smtp);
+  const [brevo, setBrevo] = useState({ apiKey: pricingConfig.brevoApiKey || '', senderEmail: pricingConfig.brevoSenderEmail || '' });
+  const [brevoSaved, setBrevoSaved] = useState(false);
 
   // Admin credentials state
   const [adminCreds, setAdminCreds] = useState(getAdminCreds());
@@ -63,6 +65,12 @@ export const SettingsPage: React.FC = () => {
   const handleSaveSmtp = () => {
     saveSmtpConfig(smtp);
     alert('SMTP opgeslagen.');
+  };
+
+  const handleSaveBrevo = () => {
+    saveBrevoConfig(brevo.apiKey.trim(), brevo.senderEmail.trim());
+    setBrevoSaved(true);
+    setTimeout(() => setBrevoSaved(false), 3000);
   };
 
   const handleBackupDownload = () => {
@@ -280,6 +288,41 @@ export const SettingsPage: React.FC = () => {
               </div>
           </div>
           <button onClick={handleSaveSmtp} className="mt-4 bg-apex-gold text-black px-4 py-2 rounded font-bold flex items-center gap-2"><Save className="w-4 h-4"/> Opslaan</button>
+      </div>
+
+      {/* BREVO */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
+        <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2"><Mail className="w-5 h-5 text-emerald-400" /> E-mail bevestigingen (Brevo)</h3>
+        <p className="text-zinc-500 text-xs mb-4">Bevestigingsmails voor nieuwe registraties worden via Brevo verstuurd. Gratis tot 9.000 mails/maand. Account aanmaken op <span className="text-emerald-400">brevo.com</span>.</p>
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">Brevo API Key</label>
+            <input
+              type="password"
+              value={brevo.apiKey}
+              onChange={e => setBrevo(b => ({ ...b, apiKey: e.target.value }))}
+              placeholder="xkeysib-..."
+              className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm font-mono"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">Afzender e-mailadres</label>
+            <input
+              type="email"
+              value={brevo.senderEmail}
+              onChange={e => setBrevo(b => ({ ...b, senderEmail: e.target.value }))}
+              placeholder="info@uwbedrijf.be"
+              className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded text-white text-sm"
+            />
+            <p className="text-zinc-600 text-xs mt-1">Gebruik het e-mailadres waarmee u bij Brevo bent aangemeld.</p>
+          </div>
+        </div>
+        <button
+          onClick={handleSaveBrevo}
+          className={`mt-4 px-4 py-2 rounded font-bold flex items-center gap-2 text-sm transition-colors ${brevoSaved ? 'bg-emerald-500 text-white' : 'bg-apex-gold text-black'}`}
+        >
+          <Save className="w-4 h-4" /> {brevoSaved ? 'Opgeslagen!' : 'Opslaan'}
+        </button>
       </div>
 
       {/* BACKUP */}

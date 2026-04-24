@@ -265,6 +265,8 @@ export interface PricingConfig {
   minHours: number;
   lastMinuteFactor: number;
   smtp: SmtpConfig;
+  brevoApiKey?: string;
+  brevoSenderEmail?: string;
   invoiceSequence: Record<number, number>;
   clientSequence?: Record<number, number>; 
 }

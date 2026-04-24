@@ -99,6 +99,7 @@ interface AppState {
   getNextClientRef: () => string;
   savePricingConfig: (config: Partial<PricingConfig>) => void;
   saveSmtpConfig: (config: SmtpConfig) => void;
+  saveBrevoConfig: (apiKey: string, senderEmail: string) => void;
   saveBrandLogo: (base64: string | null) => void;
   saveInvoiceTemplate: (base64: string | null) => void;
   addTimeLog: (log: TimeLog) => void;
@@ -412,6 +413,11 @@ export const useStore = create<AppState>((set, get) => ({
   }),
   saveSmtpConfig: (config) => set(s => {
       const newConfig = { ...s.pricingConfig, smtp: config };
+      localStorage.setItem(KEYS.PRICING, JSON.stringify(newConfig));
+      return { pricingConfig: newConfig };
+  }),
+  saveBrevoConfig: (apiKey, senderEmail) => set(s => {
+      const newConfig = { ...s.pricingConfig, brevoApiKey: apiKey, brevoSenderEmail: senderEmail };
       localStorage.setItem(KEYS.PRICING, JSON.stringify(newConfig));
       return { pricingConfig: newConfig };
   }),
