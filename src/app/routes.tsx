@@ -70,7 +70,7 @@ export const router = createHashRouter([
   {
     path: '/',
     element: (
-      <RoleGuard requiredRole="admin">
+      <RoleGuard requiredRole={['admin', 'staff']}>
         <ProtectedLayout />
       </RoleGuard>
     ),
@@ -98,7 +98,7 @@ export const router = createHashRouter([
       { path: 'facturatie/facturen', element: <FacturenPage /> },
       { path: 'facturatie/factuur/:invoiceId', element: <InvoiceDetailPage /> },
       { path: 'facturatie/export', element: <ExportPage /> },
-      { path: 'settings', element: <SettingsPage /> },
+      { path: 'settings', element: <RoleGuard requiredRole="admin"><SettingsPage /></RoleGuard> },
       { path: 'registraties', element: <RegistratiesPage /> },
     ]
   },

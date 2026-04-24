@@ -149,6 +149,7 @@ interface AppState {
   pendingRegistrations: PendingRegistration[];
   addPendingRegistration: (data: Omit<PendingRegistration, 'id' | 'status' | 'submittedAt'>) => void;
   reviewPendingRegistration: (id: string, action: 'APPROVE' | 'REJECT', reason?: string) => void;
+  addEmployee: (data: Omit<Employee, 'id' | 'auditLog' | 'personalInfoStatus' | 'idCardStatus' | 'badgeDataStatus'>) => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -555,6 +556,19 @@ export const useStore = create<AppState>((set, get) => ({
       const n = s.clients.map(c => c.id === id ? { ...c, ...updates } : c);
       localStorage.setItem('apex_clients', JSON.stringify(n));
       return { clients: n };
+  }),
+  addEmployee: (data) => set(s => {
+      const newEmployee: Employee = {
+          ...data,
+          id: `EMP-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+          personalInfoStatus: 'MISSING',
+          idCardStatus: 'MISSING',
+          badgeDataStatus: 'MISSING',
+          auditLog: [{ date: new Date().toISOString(), action: 'Profiel aangemaakt door admin', user: 'Admin' }],
+      };
+      const n = [...s.employees, newEmployee];
+      localStorage.setItem('apex_employees', JSON.stringify(n));
+      return { employees: n };
   }),
   addPendingRegistration: (data) => set(s => {
       const reg: PendingRegistration = {
